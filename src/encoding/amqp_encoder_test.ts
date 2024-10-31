@@ -1,6 +1,7 @@
-import { arrayOf, assertEquals, assertThrows } from "../testing.ts";
+import { assertEquals, assertThrows } from "../../deps_dev.ts";
+import { arrayOf } from "../testing.ts";
 import { AmqpEncoder } from "./amqp_encoder.ts";
-import { AmqpFieldType, AmqpFieldValue } from "./amqp_field_types.ts";
+import type { AmqpFieldType, AmqpFieldValue } from "./amqp_field_types.ts";
 import { charCode } from "./utils.ts";
 
 function tableOf(data: Uint8Array) {

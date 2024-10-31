@@ -1,5 +1,7 @@
+import type { Closer, Reader, Writer } from "@std/io/types";
+import { assertEquals, assertRejects } from "../deps_dev.ts";
+import { arrayOf } from "./testing.ts";
 import { AmqpSocket } from "./amqp_socket.ts";
-import { arrayOf, assertEquals, assertRejects, test } from "./testing.ts";
 import { mock } from "./mock.ts";
 import { FrameError } from "./frame_error.ts";
 import { createResolvable } from "./resolvable.ts";
@@ -9,7 +11,7 @@ function sleep(ms: number) {
 }
 
 function createConn() {
-  return mock.obj<Deno.Reader & Deno.Writer & Deno.Closer>({
+  return mock.obj<Reader & Writer & Closer>({
     read: mock.fn(),
     write: mock.fn(async () => {}),
     close: mock.fn(() => {}),
@@ -33,7 +35,7 @@ function createEofReader() {
   };
 }
 
-test("write - method frame", async () => {
+Deno.test("write - method frame", async () => {
   const conn = createConn();
   const socket = new AmqpSocket(conn);
   await socket.write([
@@ -83,7 +85,7 @@ test("write - method frame", async () => {
   );
 });
 
-test("write - content frame", async () => {
+Deno.test("write - content frame", async () => {
   const conn = createConn();
   const socket = new AmqpSocket(conn);
   await socket.write(
@@ -106,7 +108,7 @@ test("write - content frame", async () => {
   );
 });
 
-test("write - content frame - too big", async () => {
+Deno.test("write - content frame - too big", async () => {
   const conn = createConn();
   const socket = new AmqpSocket(conn);
   socket.tune({
@@ -145,7 +147,7 @@ test("write - content frame - too big", async () => {
   );
 });
 
-test("write - content error on write", async () => {
+Deno.test("write - content error on write", async () => {
   const conn = createConn();
   const socket = new AmqpSocket(conn);
 
@@ -179,7 +181,7 @@ function wrap(type: number, channel: number, payload: Uint8Array) {
   );
 }
 
-test("read - method frame", async () => {
+Deno.test("read - method frame", async () => {
   const conn = createConn();
   const socket = new AmqpSocket(conn);
 
@@ -236,7 +238,7 @@ test("read - method frame", async () => {
   });
 });
 
-test("read - heartbeat frame", async () => {
+Deno.test("read - heartbeat frame", async () => {
   const conn = createConn();
   const socket = new AmqpSocket(conn);
 
@@ -256,7 +258,7 @@ test("read - heartbeat frame", async () => {
   });
 });
 
-test("read - throws on unknown frame type", async () => {
+Deno.test("read - throws on unknown frame type", async () => {
   const conn = createConn();
   const socket = new AmqpSocket(conn);
 
@@ -281,7 +283,7 @@ test("read - throws on unknown frame type", async () => {
   );
 });
 
-test("read - throws on bad frame end", async () => {
+Deno.test("read - throws on bad frame end", async () => {
   const conn = createConn();
   const socket = new AmqpSocket(conn);
 
@@ -303,7 +305,7 @@ test("read - throws on bad frame end", async () => {
   );
 });
 
-test("read - throws on EOF", async () => {
+Deno.test("read - throws on EOF", async () => {
   const conn = createConn();
   const socket = new AmqpSocket(conn);
 
@@ -318,7 +320,7 @@ test("read - throws on EOF", async () => {
   );
 });
 
-test("read - closes connection on EOF", async () => {
+Deno.test("read - closes connection on EOF", async () => {
   const conn = createConn();
   const socket = new AmqpSocket(conn);
 
@@ -329,7 +331,7 @@ test("read - closes connection on EOF", async () => {
   assertEquals(conn.close.mock.calls.length, 1);
 });
 
-test("read - closes connection on EOF after heartbeat tuning", async () => {
+Deno.test("read - closes connection on EOF after heartbeat tuning", async () => {
   const conn = createConn();
   const socket = new AmqpSocket(conn);
 
@@ -342,7 +344,7 @@ test("read - closes connection on EOF after heartbeat tuning", async () => {
   assertEquals(conn.close.mock.calls.length, 1);
 });
 
-test("read - throws on broken reader", async () => {
+Deno.test("read - throws on broken reader", async () => {
   const conn = createConn();
   const socket = new AmqpSocket(conn);
 
@@ -359,7 +361,7 @@ test("read - throws on broken reader", async () => {
   );
 });
 
-test("close - closes connection", () => {
+Deno.test("close - closes connection", () => {
   const conn = createConn();
   const socket = new AmqpSocket(conn);
 
@@ -368,7 +370,7 @@ test("close - closes connection", () => {
   assertEquals(conn.close.mock.calls.length, 1);
 });
 
-test("close - closes connection when waiting for read", () => {
+Deno.test("close - closes connection when waiting for read", () => {
   // Ensures we don't leak async ops
   const conn = createConn();
   const socket = new AmqpSocket(conn);
@@ -388,7 +390,7 @@ test("close - closes connection when waiting for read", () => {
   assertEquals(conn.close.mock.calls.length, 1);
 });
 
-test("heartbeat - sends heartbeat on interval", async () => {
+Deno.test("heartbeat - sends heartbeat on interval", async () => {
   const conn = createConn();
   const socket = new AmqpSocket(conn);
 
@@ -403,7 +405,7 @@ test("heartbeat - sends heartbeat on interval", async () => {
   socket.tune({ sendTimeout: 0 });
 });
 
-test("heartbeat - times out read after double", async () => {
+Deno.test("heartbeat - times out read after double", async () => {
   const conn = createConn();
   const socket = new AmqpSocket(conn);
 
@@ -425,7 +427,7 @@ test("heartbeat - times out read after double", async () => {
   );
 });
 
-test("heartbeat - closes connection after time out", async () => {
+Deno.test("heartbeat - closes connection after time out", async () => {
   const conn = createConn();
   const socket = new AmqpSocket(conn);
 
@@ -443,7 +445,7 @@ test("heartbeat - closes connection after time out", async () => {
   assertEquals(conn.close.mock.calls.length, 1);
 });
 
-test("heartbeat - does not crash if reading throws _after_ timeout", async () => {
+Deno.test("heartbeat - does not crash if reading throws _after_ timeout", async () => {
   const conn = createConn();
   const socket = new AmqpSocket(conn);
 
@@ -467,7 +469,7 @@ test("heartbeat - does not crash if reading throws _after_ timeout", async () =>
   resolvable.reject(new Error("Damn"));
 });
 
-test("heartbeat - does not crash if reading throws _before_ timeout", async () => {
+Deno.test("heartbeat - does not crash if reading throws _before_ timeout", async () => {
   const conn = createConn();
   const socket = new AmqpSocket(conn);
 

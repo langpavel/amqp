@@ -1,9 +1,9 @@
 async function benchmarkFunction(
   fn: () => void | Promise<void>,
 ): Promise<number> {
-  const now = window.performance.now();
+  const now = globalThis.performance.now();
   await fn();
-  return window.performance.now() - now;
+  return globalThis.performance.now() - now;
 }
 
 function existsSync(path: string) {

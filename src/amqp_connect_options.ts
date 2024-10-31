@@ -109,7 +109,9 @@ function parseUrl(value: string): AmqpConnectOptions {
     username: url.username || "guest",
     password: url.password || "guest",
     tls: resolveTls(url),
-    vhost: url.pathname.length > 0 ? decodeURIComponent(url.pathname.substring(1)) : "/",
+    vhost: url.pathname.length > 0
+      ? decodeURIComponent(url.pathname.substring(1))
+      : "/",
     heartbeatInterval: heartbeat,
     frameMax: frameMax,
   };
@@ -128,7 +130,9 @@ export function parseOptions(
     vhost = "/",
     frameMax,
     tls = false,
-  } = typeof optionsOrString === "string" ? parseUrl(optionsOrString) : optionsOrString;
+  } = typeof optionsOrString === "string"
+    ? parseUrl(optionsOrString)
+    : optionsOrString;
 
   return {
     hostname,

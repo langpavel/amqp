@@ -1,5 +1,10 @@
 import { assertEquals, assertNotEquals, assertRejects } from "../deps_dev.ts";
-import { getQueue, getQueueBindings, randomString, withConnection } from "./api.ts";
+import {
+  getQueue,
+  getQueueBindings,
+  randomString,
+  withConnection,
+} from "./api.ts";
 
 Deno.test(
   "declare queue",
@@ -141,7 +146,9 @@ Deno.test(
     assertEquals(queue?.name, queueName);
 
     const bindings = await getQueueBindings(queueName);
-    const binding = bindings.find((b: { source: string }) => b.source === exchangeName);
+    const binding = bindings.find((b: { source: string }) =>
+      b.source === exchangeName
+    );
 
     assertEquals(binding, {
       vhost: "/",
@@ -170,14 +177,18 @@ Deno.test(
     assertEquals(queue?.name, queueName);
 
     await getQueueBindings(queueName).then((bindings) => {
-      const binding = bindings.find((b: { source: string }) => b.source === exchangeName);
+      const binding = bindings.find((b: { source: string }) =>
+        b.source === exchangeName
+      );
       assertNotEquals(binding, undefined);
     });
 
     await channel.unbindQueue({ exchange: exchangeName, routingKey });
 
     await getQueueBindings(queueName).then((bindings) => {
-      const binding = bindings.find((b: { source: string }) => b.source === exchangeName);
+      const binding = bindings.find((b: { source: string }) =>
+        b.source === exchangeName
+      );
       assertEquals(binding, undefined);
     });
   }),

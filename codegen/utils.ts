@@ -1,4 +1,9 @@
-import { ArgumentDefinition, ClassDefinition, MethodDefinition, Spec } from "./amqp_spec.ts";
+import type {
+  ArgumentDefinition,
+  ClassDefinition,
+  MethodDefinition,
+  Spec,
+} from "./amqp_spec.ts";
 
 export function resolveType(spec: Spec, arg: ArgumentDefinition) {
   if (arg.type !== undefined) {
@@ -79,6 +84,7 @@ export function constantName(...names: string[]) {
 
 export function printClassPropertyInterface(clazz: ClassDefinition) {
   return `
+  ${!clazz.properties?.length ? "/** @ignore */" : ""}
   export interface ${pascalCase(clazz.name)}Properties {
     ${
     (clazz.properties || []).map((prop) => {
@@ -99,14 +105,20 @@ export function printMethodArgsInterface(
       method.name,
     )
   }Args`;
+  const args = method.arguments.filter((arg) => arg.name !== "nowait");
   return `
+${!args.length ? "/** @ignore */" : ""}
 export interface ${name} {
     ${
-    method.arguments.filter((arg) => arg.name !== "nowait").map((arg) => {
+    args.map((arg) => {
       const isOptional = arg["default-value"] !== undefined;
-      const comment = isOptional ? `/** Default ${JSON.stringify(arg["default-value"])} */` : "";
+      const comment = isOptional
+        ? `/** Default ${JSON.stringify(arg["default-value"])} */`
+        : "";
       const type = resolveTypescriptType(resolveType(spec, arg));
-      return `${comment}${camelCase(arg.name)}${isOptional ? "?" : ""}: ${type};`;
+      return `${comment}${camelCase(arg.name)}${
+        isOptional ? "?" : ""
+      }: ${type};`;
     }).join("\n")
   }
 }
@@ -120,6 +132,7 @@ export function printMethodValueInterface(
 ) {
   const name = `${pascalCase(clazz.name)}${pascalCase(method.name)}`;
   return `
+${!method.arguments.length ? "/** @ignore */" : ""}
 export interface ${name} extends ${name}Args {
     ${
     method.arguments.map((arg) => {
@@ -170,13 +183,17 @@ export function printSendMethodDefinition(
 
 export function printSendMethodUnion(spec: Spec) {
   return `export type SendMethod = ${
-    spec.classes.flatMap((c) => c.methods.map((m) => `Send${pascalCase(c.name)}${pascalCase(m.name)}`)).join(" | ")
+    spec.classes.flatMap((c) =>
+      c.methods.map((m) => `Send${pascalCase(c.name)}${pascalCase(m.name)}`)
+    ).join(" | ")
   }`;
 }
 
 export function printReceiveMethodUnion(spec: Spec) {
   return `export type ReceiveMethod = ${
-    spec.classes.flatMap((c) => c.methods.map((m) => `Receive${pascalCase(c.name)}${pascalCase(m.name)}`)).join(" | ")
+    spec.classes.flatMap((c) =>
+      c.methods.map((m) => `Receive${pascalCase(c.name)}${pascalCase(m.name)}`)
+    ).join(" | ")
   }`;
 }
 
@@ -193,7 +210,9 @@ export function printHeaderDefinition(
 }
 
 export function printHeaderUnion(spec: Spec) {
-  return `export type Header = ${spec.classes.map((c) => `${pascalCase(c.name)}Header`).join(" | ")}`;
+  return `export type Header = ${
+    spec.classes.map((c) => `${pascalCase(c.name)}Header`).join(" | ")
+  }`;
 }
 
 export function getDefaultValue(a: ArgumentDefinition) {
@@ -227,7 +246,7 @@ function encodeMethod(method: SendMethod): Uint8Array {
     ${
     spec.classes.map((clazz) => {
       return `
-      case ${clazz.id}: { 
+      case ${clazz.id}: {
         switch(method.methodId) {
           ${
         clazz.methods.map((method) => {
@@ -264,15 +283,15 @@ function decodeMethod(data: Uint8Array): ReceiveMethod {
     ${
     spec.classes.map((clazz) => {
       return `
-      case ${clazz.id}: { 
+      case ${clazz.id}: {
         switch(methodId) {
           ${
         clazz.methods.map((method) => {
           return `
-          case ${method.id}: 
-            return { 
-              classId, 
-              methodId, 
+          case ${method.id}:
+            return {
+              classId,
+              methodId,
               args: {
                 ${
             method.arguments.map((arg) => {
@@ -345,7 +364,7 @@ function encodeHeader(header: Header) : Uint8Array {
   switch(header.classId) {
     ${
     spec.classes.map((clazz) => {
-      return `case ${clazz.id}: 
+      return `case ${clazz.id}:
         ${printEncodeHeader(clazz)}
          break;`;
     }).join("\n")
@@ -371,7 +390,7 @@ function decodeHeader(data: Uint8Array) : Header {
   switch(classId) {
     ${
     spec.classes.map((clazz) => {
-      return `case ${clazz.id}: 
+      return `case ${clazz.id}:
       return {
         classId,
         size,

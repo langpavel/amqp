@@ -1,5 +1,10 @@
 import { assertEquals, assertNotEquals, assertRejects } from "../deps_dev.ts";
-import { getExchange, getExchangeBindings, randomString, withConnection } from "./api.ts";
+import {
+  getExchange,
+  getExchangeBindings,
+  randomString,
+  withConnection,
+} from "./api.ts";
 
 Deno.test(
   "declare exchange",
@@ -116,13 +121,17 @@ Deno.test(
     await channel.bindExchange({ source, destination });
 
     await getExchangeBindings(source).then((bindings) => {
-      const binding = bindings.find((b: { destination: string }) => b.destination === destination);
+      const binding = bindings.find((b: { destination: string }) =>
+        b.destination === destination
+      );
       assertNotEquals(binding, undefined);
     });
 
     await channel.unbindExchange({ source, destination });
     await getExchangeBindings(source).then((bindings) => {
-      const binding = bindings.find((b: { destination: string }) => b.destination === destination);
+      const binding = bindings.find((b: { destination: string }) =>
+        b.destination === destination
+      );
       assertEquals(binding, undefined);
     });
   }),

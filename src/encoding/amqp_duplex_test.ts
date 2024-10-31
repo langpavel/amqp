@@ -1,4 +1,4 @@
-import { assertEquals } from "../testing.ts";
+import { assertEquals } from "../../deps_dev.ts";
 import { AmqpEncoder } from "./amqp_encoder.ts";
 import { AmqpDecoder } from "./amqp_decoder.ts";
 

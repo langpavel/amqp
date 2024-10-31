@@ -1,5 +1,9 @@
-import { AmqpConnectOptions, AmqpConnectParameters, parseOptions } from "./amqp_connect_options.ts";
 import { assertEquals, assertThrows } from "../deps_dev.ts";
+import {
+  type AmqpConnectOptions,
+  type AmqpConnectParameters,
+  parseOptions,
+} from "./amqp_connect_options.ts";
 
 function testUrl(
   url: string,

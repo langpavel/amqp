@@ -1,12 +1,14 @@
 import { constantName } from "./utils.ts";
-import spec, { ConstantDefinition, Spec } from "./amqp_spec.ts";
+import spec, { type ConstantDefinition, type Spec } from "./amqp_spec.ts";
 
 function formatExport(name: string, value: number) {
   return `export const ${name} = ${JSON.stringify(value)} as const;`;
 }
 
 function formatConstant(constant: ConstantDefinition) {
-  const name = constant.class ? constantName(constant.class, constant.name) : constantName(constant.name);
+  const name = constant.class
+    ? constantName(constant.class, constant.name)
+    : constantName(constant.name);
   return formatExport(name, constant.value);
 }
 

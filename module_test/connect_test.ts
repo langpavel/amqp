@@ -1,5 +1,5 @@
-import { connect } from "../mod.ts";
 import { assertRejects } from "../deps_dev.ts";
+import { connect } from "../mod.ts";
 
 Deno.test(
   "connect url",

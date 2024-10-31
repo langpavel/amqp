@@ -17,7 +17,9 @@ Deno.test(
 
       for (const _ of Array.from({ length: 10 })) {
         await Promise.all(
-          Array.from({ length: 100 }).map(() => channel1.publish({ routingKey }, {}, message)),
+          Array.from({ length: 100 }).map(() =>
+            channel1.publish({ routingKey }, {}, message)
+          ),
         );
       }
     } finally {

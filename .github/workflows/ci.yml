@@ -1,43 +1,36 @@
-name: CI
-
+name: ci
 on:
   push:
-    branches: [master]
+    branches: [main]
   pull_request:
-    branches: [master]
-
+    branches: [main]
 jobs:
   build:
     runs-on: ${{ matrix.os }}
     services:
       rabbitmq:
-        image: rabbitmq:3-management
+        image: rabbitmq:4-management
         ports:
           - 5672:5672
           - 15672:15672
     strategy:
       matrix:
         os: [ubuntu-latest]
-        deno: [v1.x, canary]
+        deno: [v2.x, canary]
     steps:
-      - uses: actions/checkout@v3
-
-      - name: Setup Deno environment
-        uses: denoland/setup-deno@v1
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Deno
+        uses: denoland/setup-deno@v2
         with:
           deno-version: ${{ matrix.deno }}
-
       - name: Check formatting
         run: deno fmt --check
-
       - name: Lint
         run: deno lint src/ module_test/
-
-      - name: Run unit tests
+      - name: Unit tests
         run: deno test src/
-
-      - name: Wait for rabbit
+      - name: Wait for RabbitMQ
         run: deno run --allow-net module_test/wait_for_server.ts
-
-      - name: Run module tests
+      - name: Module tests
         run: deno test --allow-net module_test/

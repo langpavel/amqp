@@ -1,11 +1,11 @@
 import {
-  AmqpBitField,
-  AmqpFieldType,
-  AmqpFieldValue,
-  AmqpFlagsField,
-  AmqpNumberField,
-  AmqpStringField,
-  AmqpTableField,
+  type AmqpBitField,
+  type AmqpFieldType,
+  type AmqpFieldValue,
+  type AmqpFlagsField,
+  type AmqpNumberField,
+  type AmqpStringField,
+  type AmqpTableField,
   fromCharCode,
   TableFieldType,
 } from "./amqp_field_types.ts";

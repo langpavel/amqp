@@ -1,17 +1,22 @@
 // deno-lint-ignore-file no-empty-interface
 
+/** @ignore */
 export interface ConnectionProperties {
 }
 
+/** @ignore */
 export interface ChannelProperties {
 }
 
+/** @ignore */
 export interface AccessProperties {
 }
 
+/** @ignore */
 export interface ExchangeProperties {
 }
 
+/** @ignore */
 export interface QueueProperties {
 }
 
@@ -32,9 +37,11 @@ export interface BasicProperties {
   clusterId?: string;
 }
 
+/** @ignore */
 export interface TxProperties {
 }
 
+/** @ignore */
 export interface ConfirmProperties {
 }
 
@@ -90,6 +97,7 @@ export interface ConnectionCloseArgs {
   methodId: number;
 }
 
+/** @ignore */
 export interface ConnectionCloseOkArgs {
 }
 
@@ -97,6 +105,7 @@ export interface ConnectionBlockedArgs {
   /** Default "" */ reason?: string;
 }
 
+/** @ignore */
 export interface ConnectionUnblockedArgs {
 }
 
@@ -105,6 +114,7 @@ export interface ConnectionUpdateSecretArgs {
   reason: string;
 }
 
+/** @ignore */
 export interface ConnectionUpdateSecretOkArgs {
 }
 
@@ -131,6 +141,7 @@ export interface ChannelCloseArgs {
   methodId: number;
 }
 
+/** @ignore */
 export interface ChannelCloseOkArgs {
 }
 
@@ -158,6 +169,7 @@ export interface ExchangeDeclareArgs {
   /** Default {} */ arguments?: Record<string, unknown>;
 }
 
+/** @ignore */
 export interface ExchangeDeclareOkArgs {
 }
 
@@ -167,6 +179,7 @@ export interface ExchangeDeleteArgs {
   /** Default false */ ifUnused?: boolean;
 }
 
+/** @ignore */
 export interface ExchangeDeleteOkArgs {
 }
 
@@ -178,6 +191,7 @@ export interface ExchangeBindArgs {
   /** Default {} */ arguments?: Record<string, unknown>;
 }
 
+/** @ignore */
 export interface ExchangeBindOkArgs {
 }
 
@@ -189,6 +203,7 @@ export interface ExchangeUnbindArgs {
   /** Default {} */ arguments?: Record<string, unknown>;
 }
 
+/** @ignore */
 export interface ExchangeUnbindOkArgs {
 }
 
@@ -216,6 +231,7 @@ export interface QueueBindArgs {
   /** Default {} */ arguments?: Record<string, unknown>;
 }
 
+/** @ignore */
 export interface QueueBindOkArgs {
 }
 
@@ -247,6 +263,7 @@ export interface QueueUnbindArgs {
   /** Default {} */ arguments?: Record<string, unknown>;
 }
 
+/** @ignore */
 export interface QueueUnbindOkArgs {
 }
 
@@ -256,6 +273,7 @@ export interface BasicQosArgs {
   /** Default false */ global?: boolean;
 }
 
+/** @ignore */
 export interface BasicQosOkArgs {
 }
 
@@ -340,6 +358,7 @@ export interface BasicRecoverArgs {
   /** Default false */ requeue?: boolean;
 }
 
+/** @ignore */
 export interface BasicRecoverOkArgs {
 }
 
@@ -349,27 +368,35 @@ export interface BasicNackArgs {
   /** Default true */ requeue?: boolean;
 }
 
+/** @ignore */
 export interface TxSelectArgs {
 }
 
+/** @ignore */
 export interface TxSelectOkArgs {
 }
 
+/** @ignore */
 export interface TxCommitArgs {
 }
 
+/** @ignore */
 export interface TxCommitOkArgs {
 }
 
+/** @ignore */
 export interface TxRollbackArgs {
 }
 
+/** @ignore */
 export interface TxRollbackOkArgs {
 }
 
+/** @ignore */
 export interface ConfirmSelectArgs {
 }
 
+/** @ignore */
 export interface ConfirmSelectOkArgs {
 }
 
@@ -425,6 +452,7 @@ export interface ConnectionClose extends ConnectionCloseArgs {
   methodId: number;
 }
 
+/** @ignore */
 export interface ConnectionCloseOk extends ConnectionCloseOkArgs {
 }
 
@@ -432,6 +460,7 @@ export interface ConnectionBlocked extends ConnectionBlockedArgs {
   reason: string;
 }
 
+/** @ignore */
 export interface ConnectionUnblocked extends ConnectionUnblockedArgs {
 }
 
@@ -440,6 +469,7 @@ export interface ConnectionUpdateSecret extends ConnectionUpdateSecretArgs {
   reason: string;
 }
 
+/** @ignore */
 export interface ConnectionUpdateSecretOk extends ConnectionUpdateSecretOkArgs {
 }
 
@@ -466,6 +496,7 @@ export interface ChannelClose extends ChannelCloseArgs {
   methodId: number;
 }
 
+/** @ignore */
 export interface ChannelCloseOk extends ChannelCloseOkArgs {
 }
 
@@ -494,6 +525,7 @@ export interface ExchangeDeclare extends ExchangeDeclareArgs {
   arguments: Record<string, unknown>;
 }
 
+/** @ignore */
 export interface ExchangeDeclareOk extends ExchangeDeclareOkArgs {
 }
 
@@ -504,6 +536,7 @@ export interface ExchangeDelete extends ExchangeDeleteArgs {
   nowait: boolean;
 }
 
+/** @ignore */
 export interface ExchangeDeleteOk extends ExchangeDeleteOkArgs {
 }
 
@@ -516,6 +549,7 @@ export interface ExchangeBind extends ExchangeBindArgs {
   arguments: Record<string, unknown>;
 }
 
+/** @ignore */
 export interface ExchangeBindOk extends ExchangeBindOkArgs {
 }
 
@@ -528,6 +562,7 @@ export interface ExchangeUnbind extends ExchangeUnbindArgs {
   arguments: Record<string, unknown>;
 }
 
+/** @ignore */
 export interface ExchangeUnbindOk extends ExchangeUnbindOkArgs {
 }
 
@@ -557,6 +592,7 @@ export interface QueueBind extends QueueBindArgs {
   arguments: Record<string, unknown>;
 }
 
+/** @ignore */
 export interface QueueBindOk extends QueueBindOkArgs {
 }
 
@@ -590,6 +626,7 @@ export interface QueueUnbind extends QueueUnbindArgs {
   arguments: Record<string, unknown>;
 }
 
+/** @ignore */
 export interface QueueUnbindOk extends QueueUnbindOkArgs {
 }
 
@@ -599,6 +636,7 @@ export interface BasicQos extends BasicQosArgs {
   global: boolean;
 }
 
+/** @ignore */
 export interface BasicQosOk extends BasicQosOkArgs {
 }
 
@@ -685,6 +723,7 @@ export interface BasicRecover extends BasicRecoverArgs {
   requeue: boolean;
 }
 
+/** @ignore */
 export interface BasicRecoverOk extends BasicRecoverOkArgs {
 }
 
@@ -694,21 +733,27 @@ export interface BasicNack extends BasicNackArgs {
   requeue: boolean;
 }
 
+/** @ignore */
 export interface TxSelect extends TxSelectArgs {
 }
 
+/** @ignore */
 export interface TxSelectOk extends TxSelectOkArgs {
 }
 
+/** @ignore */
 export interface TxCommit extends TxCommitArgs {
 }
 
+/** @ignore */
 export interface TxCommitOk extends TxCommitOkArgs {
 }
 
+/** @ignore */
 export interface TxRollback extends TxRollbackArgs {
 }
 
+/** @ignore */
 export interface TxRollbackOk extends TxRollbackOkArgs {
 }
 
@@ -716,5 +761,6 @@ export interface ConfirmSelect extends ConfirmSelectArgs {
   nowait: boolean;
 }
 
+/** @ignore */
 export interface ConfirmSelectOk extends ConfirmSelectOkArgs {
 }

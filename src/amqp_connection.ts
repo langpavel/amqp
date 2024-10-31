@@ -1,7 +1,10 @@
 import { AmqpChannel } from "./amqp_channel.ts";
 import type { AmqpSocket } from "./amqp_socket.ts";
-import type { ConnectionClose, ConnectionStart, ConnectionTune } from "./amqp_types.ts";
-
+import type {
+  ConnectionClose,
+  ConnectionStart,
+  ConnectionTune,
+} from "./amqp_types.ts";
 import {
   CHANNEL,
   CHANNEL_OPEN,
@@ -17,9 +20,9 @@ import {
   CONNECTION_TUNE_OK,
   HARD_ERROR_CONNECTION_FORCED,
 } from "./amqp_constants.ts";
-import { AmqpMultiplexer, createAmqpMux } from "./amqp_multiplexer.ts";
+import { type AmqpMultiplexer, createAmqpMux } from "./amqp_multiplexer.ts";
 import { serializeConnectionError } from "./error_handling.ts";
-import { createResolvable, ResolvablePromise } from "./resolvable.ts";
+import { createResolvable, type ResolvablePromise } from "./resolvable.ts";
 
 export interface AmqpConnectionOptions {
   username: string;
@@ -36,10 +39,10 @@ function credentials(username: string, password: string) {
 }
 
 const clientProperties = Object.freeze({
-  product: "deno-amqp",
+  product: "amqp",
   platform: `Deno ${Deno.version.deno} https://deno.land`,
   version: "0",
-  information: "https://deno.land/x/amqp/",
+  information: "https://jsr.io/@nashaddams/amqp",
 });
 
 function tune(ours: number | undefined, theirs: number) {
@@ -191,7 +194,7 @@ export class AmqpConnection implements AmqpConnection {
    * If the connection is unexpectedly closed by the server or from an error, the promise
    * will _reject_ with the reason.
    */
-  async closed() {
+  async closed(): Promise<void> {
     return await this.#closedPromise;
   }
 }

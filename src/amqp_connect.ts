@@ -1,6 +1,9 @@
 import { AmqpConnection } from "./amqp_connection.ts";
 import { AmqpSocket } from "./amqp_socket.ts";
-import { AmqpConnectOptions, parseOptions } from "./amqp_connect_options.ts";
+import {
+  type AmqpConnectOptions,
+  parseOptions,
+} from "./amqp_connect_options.ts";
 
 export type { AmqpConnectOptions };
 
@@ -24,7 +27,9 @@ export async function connect(
     tls,
   } = parseOptions(optionsOrUrl);
 
-  const conn = tls ? await Deno.connectTls({ port, hostname }) : await Deno.connect({ port, hostname });
+  const conn = tls
+    ? await Deno.connectTls({ port, hostname })
+    : await Deno.connect({ port, hostname });
   const socket = new AmqpSocket(conn);
 
   const connection = new AmqpConnection(socket, {

@@ -10,7 +10,7 @@ import {
   printSendMethodDefinition,
   printSendMethodUnion,
 } from "./utils.ts";
-import spec, { Spec } from "./amqp_spec.ts";
+import spec, { type Spec } from "./amqp_spec.ts";
 
 function printMethodNameFunction(spec: Spec) {
   return `
@@ -43,12 +43,20 @@ const encoder = new TextEncoder();
 const template = (spec: Spec) => `
 // deno-lint-ignore-file no-explicit-any
 import * as enc from "./encoding/mod.ts"
-import * as t from "./amqp_types.ts"
+import type * as t from "./amqp_types.ts"
 
 ${printMethodNameFunction(spec)}
 ${withNowaitInterface}
-${spec.classes.flatMap((clazz) => clazz.methods.map((m) => printReceiveMethodDefinition(clazz, m))).join("\n")}
-${spec.classes.flatMap((clazz) => clazz.methods.map((m) => printSendMethodDefinition(clazz, m))).join("\n")}
+${
+  spec.classes.flatMap((clazz) =>
+    clazz.methods.map((m) => printReceiveMethodDefinition(clazz, m))
+  ).join("\n")
+}
+${
+  spec.classes.flatMap((clazz) =>
+    clazz.methods.map((m) => printSendMethodDefinition(clazz, m))
+  ).join("\n")
+}
 ${spec.classes.map(printHeaderDefinition).join("\n")}
 ${printReceiveMethodUnion(spec)}
 ${printSendMethodUnion(spec)}

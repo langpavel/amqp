@@ -1,4 +1,4 @@
-import { assertRejects } from "../src/testing.ts";
+import { assertRejects } from "../deps_dev.ts";
 import { randomString, withConnection } from "./api.ts";
 
 Deno.test(

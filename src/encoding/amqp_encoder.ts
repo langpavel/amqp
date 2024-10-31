@@ -1,12 +1,12 @@
 import {
-  AmqpBitField,
-  AmqpField,
-  AmqpFieldType,
-  AmqpFieldValue,
-  AmqpFlagsField,
-  AmqpNumberField,
-  AmqpStringField,
-  AmqpTableField,
+  type AmqpBitField,
+  type AmqpField,
+  type AmqpFieldType,
+  type AmqpFieldValue,
+  type AmqpFlagsField,
+  type AmqpNumberField,
+  type AmqpStringField,
+  type AmqpTableField,
   TableFieldType,
 } from "./amqp_field_types.ts";
 import { assertUnreachable, charCode, padArray } from "./utils.ts";

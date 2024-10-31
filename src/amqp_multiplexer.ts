@@ -1,11 +1,24 @@
-import type { Header, ReceiveMethod, SendBasicPublish, SendMethod } from "./amqp_codec.ts";
+import { Buffer } from "@std/io/buffer";
+import type {
+  Header,
+  ReceiveMethod,
+  SendBasicPublish,
+  SendMethod,
+} from "./amqp_codec.ts";
 import type { AmqpSocketReader, AmqpSocketWriter } from "./amqp_socket.ts";
 import type { IncomingFrame, OutgoingFrame } from "./amqp_frame.ts";
 
-import { CHANNEL, CHANNEL_CLOSE, CONNECTION, CONNECTION_CLOSE } from "./amqp_constants.ts";
-import { serializeChannelError, serializeConnectionError } from "./error_handling.ts";
-import { Buffer } from "../deps.ts";
-import { BasicProperties, BasicPublishArgs } from "./amqp_types.ts";
+import {
+  CHANNEL,
+  CHANNEL_CLOSE,
+  CONNECTION,
+  CONNECTION_CLOSE,
+} from "./amqp_constants.ts";
+import {
+  serializeChannelError,
+  serializeConnectionError,
+} from "./error_handling.ts";
+import type { BasicProperties, BasicPublishArgs } from "./amqp_types.ts";
 
 type ExtractReceiveMethod<T extends number, U extends number> = Extract<
   ReceiveMethod,
@@ -16,15 +29,17 @@ type ExtractSendMethod<T extends number, U extends number> = Extract<
   SendMethod,
   { classId: T; methodId: U }
 >;
-export type ExtractMethod<T extends number, U extends number> = ExtractReceiveMethod<
-  T,
-  U
->["args"];
+export type ExtractMethod<T extends number, U extends number> =
+  ExtractReceiveMethod<
+    T,
+    U
+  >["args"];
 
-export type ExtractMethodArgs<T extends number, U extends number> = ExtractSendMethod<
-  T,
-  U
->["args"];
+export type ExtractMethodArgs<T extends number, U extends number> =
+  ExtractSendMethod<
+    T,
+    U
+  >["args"];
 
 export type ExtractProps<T extends number> = Extract<
   Header,
@@ -109,7 +124,7 @@ function createSocketDemux(
         emit(frame);
       }
     } catch (error) {
-      handleError(error);
+      handleError(error as Error);
     }
   }
 
@@ -134,7 +149,7 @@ function createSocketDemux(
           removeSubscriber(subscriber);
         }
       } catch (error) {
-        subscriber.error(error);
+        subscriber.error(error as Error);
         removeSubscriber(subscriber);
       }
     }

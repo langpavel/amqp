@@ -1,7 +1,13 @@
-import { arrayOf, assertEquals, assertRejects, test } from "./testing.ts";
+import { assertEquals, assertRejects } from "../deps_dev.ts";
+import { arrayOf } from "./testing.ts";
 import { createAmqpMux } from "./amqp_multiplexer.ts";
-import { ContentFrame, HeaderFrame, IncomingFrame } from "./amqp_frame.ts";
-import { BasicProperties, ChannelCloseArgs, ConnectionCloseArgs, ConnectionStart } from "./amqp_types.ts";
+import type { ContentFrame, HeaderFrame, IncomingFrame } from "./amqp_frame.ts";
+import type {
+  BasicProperties,
+  ChannelCloseArgs,
+  ConnectionCloseArgs,
+  ConnectionStart,
+} from "./amqp_types.ts";
 import {
   CHANNEL,
   CHANNEL_CLOSE,
@@ -101,7 +107,7 @@ function contentFrame(channel: number, data: number[]): ContentFrame {
   };
 }
 
-test("receive content - header and single content frame", async () => {
+Deno.test("receive content - header and single content frame", async () => {
   const conn = createSocket();
   conn.read.mock.setImplementation(createMockReader([
     basicHeader(1, 2, {}),
@@ -115,7 +121,7 @@ test("receive content - header and single content frame", async () => {
   assertEquals(data, arrayOf(1, 2));
 });
 
-test("receive content - header and no content frame", async () => {
+Deno.test("receive content - header and no content frame", async () => {
   const conn = createSocket();
   conn.read.mock.setImplementation(createMockReader([
     basicHeader(1, 0, {}),
@@ -128,7 +134,7 @@ test("receive content - header and no content frame", async () => {
   assertEquals(data, arrayOf());
 });
 
-test("receive content - header and multiple content frames", async () => {
+Deno.test("receive content - header and multiple content frames", async () => {
   const conn = createSocket();
   conn.read.mock.setImplementation(createMockReader([
     basicHeader(1, 2, {}),
@@ -143,7 +149,7 @@ test("receive content - header and multiple content frames", async () => {
   assertEquals(data, arrayOf(1, 2));
 });
 
-test("receive content - throws error if not enough content", async () => {
+Deno.test("receive content - throws error if not enough content", async () => {
   const conn = createSocket();
   conn.read.mock.setImplementation(createMockReader([
     basicHeader(1, 2, {}),
@@ -161,7 +167,7 @@ test("receive content - throws error if not enough content", async () => {
   );
 });
 
-test("receive content - throws error if no header", async () => {
+Deno.test("receive content - throws error if no header", async () => {
   const conn = createSocket();
   conn.read.mock.setImplementation(createMockReader([
     contentFrame(1, [1]),
@@ -178,7 +184,7 @@ test("receive content - throws error if no header", async () => {
   );
 });
 
-test("receive content - can receive content on multiple channels", async () => {
+Deno.test("receive content - can receive content on multiple channels", async () => {
   const conn = createSocket();
   conn.read.mock.setImplementation(createMockReader([
     basicHeader(1, 1, { correlationId: "1" }),
@@ -200,7 +206,7 @@ test("receive content - can receive content on multiple channels", async () => {
   assertEquals(content2[1], arrayOf(1, 3));
 });
 
-test("send content - does not send content frame when there is no content", async () => {
+Deno.test("send content - does not send content frame when there is no content", async () => {
   const conn = createSocket();
   const mux = createAmqpMux(conn);
 
@@ -221,7 +227,7 @@ test("send content - does not send content frame when there is no content", asyn
   ]);
 });
 
-test("send content - sends header and content frame", async () => {
+Deno.test("send content - sends header and content frame", async () => {
   const conn = createSocket();
   const mux = createAmqpMux(conn);
 
@@ -247,7 +253,7 @@ test("send content - sends header and content frame", async () => {
   ]);
 });
 
-test("receive - throws error if EOF", async () => {
+Deno.test("receive - throws error if EOF", async () => {
   const conn = createSocket();
   conn.read.mock.setImplementation(createMockReader([]));
 
@@ -262,7 +268,7 @@ test("receive - throws error if EOF", async () => {
   );
 });
 
-test("receive - resolves with frame args", async () => {
+Deno.test("receive - resolves with frame args", async () => {
   const conn = createSocket();
   conn.read.mock.setImplementation(createMockReader([
     {
@@ -294,7 +300,7 @@ test("receive - resolves with frame args", async () => {
   });
 });
 
-test("receive - rejects on channel close", async () => {
+Deno.test("receive - rejects on channel close", async () => {
   const conn = createSocket();
   conn.read.mock.setImplementation(createMockReader([
     channelClose(1, {
@@ -316,7 +322,7 @@ test("receive - rejects on channel close", async () => {
   );
 });
 
-test("receive - rejects on connection close", async () => {
+Deno.test("receive - rejects on connection close", async () => {
   const conn = createSocket();
   conn.read.mock.setImplementation(createMockReader([
     connectionClose(0, {
@@ -338,7 +344,7 @@ test("receive - rejects on connection close", async () => {
   );
 });
 
-test("receive - rejects on connection close with caused by method", async () => {
+Deno.test("receive - rejects on connection close with caused by method", async () => {
   const conn = createSocket();
   conn.read.mock.setImplementation(createMockReader([
     connectionClose(0, {
@@ -360,7 +366,7 @@ test("receive - rejects on connection close with caused by method", async () => 
   );
 });
 
-test("receive - stops reading on error", async () => {
+Deno.test("receive - stops reading on error", async () => {
   const conn = createSocket();
   conn.read.mock.setImplementation(() => {
     return Promise.reject(new Error("Damn"));
@@ -372,7 +378,7 @@ test("receive - stops reading on error", async () => {
   assertEquals(conn.read.mock.calls.length, 1);
 });
 
-test("receive - reads until error", async () => {
+Deno.test("receive - reads until error", async () => {
   const conn = createSocket();
   conn.read.mock.setImplementation(createMockReader([
     basicHeader(1, 1, {}),
@@ -387,7 +393,7 @@ test("receive - reads until error", async () => {
   assertEquals(conn.read.mock.calls.length, 3);
 });
 
-test("subscribe - invokes handler with frame args", async () => {
+Deno.test("subscribe - invokes handler with frame args", async () => {
   const conn = createSocket();
   const frame: IncomingFrame = {
     type: "method",

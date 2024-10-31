@@ -1,5 +1,5 @@
-import { AmqpConnection, connect } from "../mod.ts";
-import { AmqpConnectOptions } from "../src/amqp_connect.ts";
+import { type AmqpConnection, connect } from "../mod.ts";
+import type { AmqpConnectOptions } from "../src/amqp_connect.ts";
 
 export interface Queue {
   name: string;
@@ -27,7 +27,8 @@ async function handleResponse(r: Response) {
 
 export function randomString(length: number) {
   let result = "";
-  const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  const characters =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
   const charactersLength = characters.length;
   for (let i = 0; i < length; i++) {
     result += characters.charAt(Math.floor(Math.random() * charactersLength));
