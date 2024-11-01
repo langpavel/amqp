@@ -1,4 +1,4 @@
-name: ci
+name: tests
 on:
   push:
     branches: [main]
@@ -11,15 +11,27 @@ jobs:
       rabbitmq:
         image: rabbitmq:4-management
         ports:
+          - 5671:5671
           - 5672:5672
           - 15672:15672
+        volumes:
+          - /etc/rabbitmq
+          - /etc/ssl/certs/rabbitmq
+        options: --name rabbitmq
     strategy:
       matrix:
         os: [ubuntu-latest]
-        deno: [v2.x, canary]
+        deno: [v2.x]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Mount RabbitMQ config files
+        run: |
+          docker cp ./test/rabbitmq.conf rabbitmq:/etc/rabbitmq/rabbitmq.conf
+          docker cp ./test/cert/ca_certificate.pem rabbitmq:/etc/ssl/certs/rabbitmq/ca_certificate.pem
+          docker cp ./test/cert/server_certificate.pem rabbitmq:/etc/ssl/certs/rabbitmq/server_certificate.pem
+          docker cp ./test/cert/server_key.pem rabbitmq:/etc/ssl/certs/rabbitmq/server_key.pem
+          docker restart rabbitmq
       - name: Setup Deno
         uses: denoland/setup-deno@v2
         with:
@@ -29,8 +41,8 @@ jobs:
       - name: Lint
         run: deno lint src/ module_test/
       - name: Unit tests
-        run: deno test src/
+        run: deno task test
       - name: Wait for RabbitMQ
         run: deno run --allow-net module_test/wait_for_server.ts
       - name: Module tests
-        run: deno test --allow-net module_test/
+        run: deno task test:mod

@@ -47,7 +47,6 @@ const defaultParams: AmqpConnectParameters = {
   loglevel: "none",
   frameMax: undefined,
   vhost: "/",
-  tls: false,
 };
 
 Deno.test(
@@ -68,7 +67,6 @@ Deno.test(
   ...testUrl("amqps://localhost", {
     ...defaultParams,
     port: 5671,
-    tls: true,
   }),
 );
 
@@ -76,7 +74,6 @@ Deno.test(
   ...testUrl("amqps://localhost:123", {
     ...defaultParams,
     port: 123,
-    tls: true,
   }),
 );
 
@@ -196,11 +193,10 @@ Deno.test(
 
 Deno.test(
   ...testOpts(
-    { port: 123, tls: true },
+    { port: 123 },
     {
       ...defaultParams,
       port: 123,
-      tls: true,
     },
   ),
 );

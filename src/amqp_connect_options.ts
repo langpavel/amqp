@@ -49,7 +49,6 @@ export interface AmqpConnectOptions {
    * This should eventually be able to turn logging on and off on different levels such as framing/methods/connection.
    */
   loglevel?: "debug" | "none";
-  tls?: boolean;
 }
 
 export interface AmqpConnectParameters {
@@ -61,8 +60,13 @@ export interface AmqpConnectParameters {
   heartbeatInterval?: number;
   frameMax?: number;
   loglevel: "debug" | "none";
-  tls?: boolean;
 }
+
+export type AmqpConnectTlsOptions = Omit<
+  & Deno.ConnectTlsOptions
+  & Deno.TlsCertifiedKeyPem,
+  "port" | "hostname"
+>;
 
 function resolvePort(url: URL): number {
   if (url.port) {
@@ -78,10 +82,6 @@ function resolvePort(url: URL): number {
   }
 
   throw new Error("Unsupported protocol");
-}
-
-function resolveTls(url: URL): boolean {
-  return url.protocol === "amqps:";
 }
 
 function parseUrl(value: string): AmqpConnectOptions {
@@ -108,7 +108,6 @@ function parseUrl(value: string): AmqpConnectOptions {
     port: resolvePort(url),
     username: url.username || "guest",
     password: url.password || "guest",
-    tls: resolveTls(url),
     vhost: url.pathname.length > 0
       ? decodeURIComponent(url.pathname.substring(1))
       : "/",
@@ -129,7 +128,6 @@ export function parseOptions(
     loglevel = "none",
     vhost = "/",
     frameMax,
-    tls = false,
   } = typeof optionsOrString === "string"
     ? parseUrl(optionsOrString)
     : optionsOrString;
@@ -143,6 +141,5 @@ export function parseOptions(
     loglevel,
     vhost,
     frameMax,
-    tls,
   };
 }
