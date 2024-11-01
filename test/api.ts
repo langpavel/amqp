@@ -1,5 +1,8 @@
-import { type AmqpConnection, connect } from "../mod.ts";
-import type { AmqpConnectOptions } from "../src/amqp_connect.ts";
+import {
+  type AmqpConnection,
+  type AmqpConnectOptions,
+  connect,
+} from "../mod.ts";
 
 export interface Queue {
   name: string;

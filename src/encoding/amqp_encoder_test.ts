@@ -85,17 +85,13 @@ Deno.test(...test("uint32", 65535, arrayOf(0, 0, 255, 255)));
 Deno.test(...test("uint32", 4294967295, arrayOf(255, 255, 255, 255)));
 Deno.test(...testerError("uint32", 4294967296, ""));
 
-Deno.test(
-  ...test(
-    "uint64",
-    0x00000000fbcdef00,
-    arrayOf(0x00, 0x00, 0x00, 0x00, 0xfb, 0xcd, 0xef, 0x00),
-  ),
-);
+Deno.test(...test(
+  "uint64",
+  0x00000000fbcdef00,
+  arrayOf(0x00, 0x00, 0x00, 0x00, 0xfb, 0xcd, 0xef, 0x00),
+));
 
-Deno.test(
-  ...testerError("uint64", 0xFFFFFFFFfbcdef00, ""),
-);
+Deno.test(...testerError("uint64", 0xFFFFFFFFfbcdef00, ""));
 
 Deno.test(...test("shortstr", "abc", arrayOf(3, 97, 98, 99)));
 Deno.test(...test("shortstr", "ö", arrayOf(2, 195, 182)));

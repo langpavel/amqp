@@ -1,9 +1,9 @@
 import { assertEquals, assertRejects } from "../deps_dev.ts";
 import type { BasicDeliverArgs, BasicProperties } from "../mod.ts";
 import { createResolvable } from "../src/resolvable.ts";
-import { randomString, withConnection } from "./api.ts";
 import type { BasicReturn } from "../src/amqp_types.ts";
 import { SOFT_ERROR_NO_ROUTE } from "../src/amqp_constants.ts";
+import { randomString, withConnection } from "./api.ts";
 
 function cleanObj<T>(o: T): T {
   return JSON.parse(JSON.stringify(o));

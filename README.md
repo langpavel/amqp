@@ -55,7 +55,7 @@ podman run -d --rm \
   -p 15672:15672 \
   -p 5671:5671 \
   -p 5672:5672 \
-  -v ./test/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf \
+  -v ./test/conf/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf \
   -v ./test/cert/ca_certificate.pem:/etc/ssl/certs/rabbitmq/ca_certificate.pem \
   -v ./test/cert/server_certificate.pem:/etc/ssl/certs/rabbitmq/server_certificate.pem \
   -v ./test/cert/server_key.pem:/etc/ssl/certs/rabbitmq/server_key.pem \

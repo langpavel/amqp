@@ -11,7 +11,7 @@ async function retry<T>(func: () => Promise<T>): Promise<T> {
       const result = await func();
       return result;
     } catch (error) {
-      console.error(error.message);
+      console.error((error as Error).message);
       await sleep(1000);
     }
   }
