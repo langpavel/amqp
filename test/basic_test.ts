@@ -3,7 +3,7 @@ import type { BasicDeliverArgs, BasicProperties } from "../mod.ts";
 import { createResolvable } from "../src/resolvable.ts";
 import type { BasicReturn } from "../src/amqp_types.ts";
 import { SOFT_ERROR_NO_ROUTE } from "../src/amqp_constants.ts";
-import { randomString, withConnection } from "./api.ts";
+import { randomString, withConnection, withConnectionTls } from "./api.ts";
 
 function cleanObj<T>(o: T): T {
   return JSON.parse(JSON.stringify(o));
@@ -251,7 +251,7 @@ Deno.test(
 
 Deno.test(
   "consume queue with ack tls",
-  withConnection(async (conn) => {
+  withConnectionTls(async (conn) => {
     const channel = await conn.openChannel();
 
     const { queue } = await channel.declareQueue({ autoDelete: true });
@@ -274,12 +274,5 @@ Deno.test(
     const [_args, props, content] = await promise;
     assertEquals(cleanObj(props), { timestamp: now });
     assertEquals(JSON.parse(decodeText(content)), { foo: "bar" });
-  }, {
-    hostname: "127.0.0.1",
-    port: 5671,
-  }, {
-    key: Deno.readTextFileSync("test/cert/client_guest_key.pem"),
-    cert: Deno.readTextFileSync("test/cert/client_guest_certificate.pem"),
-    caCerts: [Deno.readTextFileSync("test/cert/ca_certificate.pem")],
   }),
 );

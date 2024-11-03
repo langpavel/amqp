@@ -1,7 +1,6 @@
 import {
   type AmqpConnection,
   type AmqpConnectOptions,
-  type AmqpConnectTlsOptions,
   connect,
 } from "../mod.ts";
 
@@ -79,16 +78,44 @@ function tryCheckEnv(name: string) {
 
 export function withConnection(
   tester: AmqpConnectionTest,
-  options: AmqpConnectOptions = {},
-  tlsOptions?: AmqpConnectTlsOptions,
+  options?: Partial<AmqpConnectOptions>,
 ): () => Promise<void> {
   return async () => {
     const connection = await connect({
-      loglevel: tryCheckEnv("DEBUG") ? "debug" : "none",
-      heartbeatInterval: 0,
       hostname: "127.0.0.1",
+      port: 5672,
+      heartbeatInterval: 0,
+      loglevel: tryCheckEnv("DEBUG") ? "debug" : "none",
       ...options,
-    }, tlsOptions);
+    });
+
+    try {
+      await tester(connection);
+    } finally {
+      await connection.close();
+    }
+  };
+}
+
+// Has to be run with the --unsafely-ignore-certificate-errors=127.0.0.1
+// flag to circumvent the hostname verification.
+// Revisit after https://github.com/denoland/deno/issues/26190 has been addressed.
+export function withConnectionTls(
+  tester: AmqpConnectionTest,
+  options?: Partial<AmqpConnectOptions>,
+): () => Promise<void> {
+  return async () => {
+    const connection = await connect({
+      hostname: "127.0.0.1",
+      port: 5671,
+      key: Deno.readTextFileSync("test/cert/client_guest_key.pem"),
+      cert: Deno.readTextFileSync("test/cert/client_guest_certificate.pem"),
+      caCerts: [Deno.readTextFileSync("test/cert/ca_certificate.pem")],
+      heartbeatInterval: 0,
+      loglevel: tryCheckEnv("DEBUG") ? "debug" : "none",
+      mechanism: "EXTERNAL",
+      ...options,
+    });
 
     try {
       await tester(connection);

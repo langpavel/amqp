@@ -2,11 +2,11 @@ import { connect } from "../src/amqp_connect.ts";
 
 Deno.test("should not crash when sending large content frames concurrently", async () => {
   const conn = await connect({
-    heartbeatInterval: 0,
     hostname: "127.0.0.1",
+    port: 5672,
+    heartbeatInterval: 0,
     frameMax: 4096,
   });
-
   const message = new TextEncoder().encode("a".repeat(100000));
 
   try {

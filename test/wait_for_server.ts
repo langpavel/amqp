@@ -20,7 +20,7 @@ async function retry<T>(func: () => Promise<T>): Promise<T> {
 }
 
 try {
-  const conn = await retry(() => connect({ hostname: "127.0.0.1" }));
+  const conn = await retry(() => connect());
   await conn.close();
   Deno.exit(0);
 } catch (_error) {

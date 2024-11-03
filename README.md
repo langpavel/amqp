@@ -13,7 +13,10 @@ This is a fork of the fantastic
 ```ts
 import { connect } from "jsr:@nashaddams/amqp";
 
-const connection = await connect();
+const connection = await connect({
+  hostname: "127.0.0.1",
+  port: 5672,
+});
 const channel = await connection.openChannel();
 
 const queueName = "my.queue";
@@ -34,7 +37,10 @@ await channel.consume(
 ```ts
 import { connect } from "jsr:@nashaddams/amqp";
 
-const connection = await connect();
+const connection = await connect({
+  hostname: "127.0.0.1",
+  port: 5672,
+});
 const channel = await connection.openChannel();
 
 const queueName = "my.queue";
@@ -46,6 +52,22 @@ await channel.publish(
 );
 
 await connection.close();
+```
+
+### TLS
+
+```ts
+import { connect } from "jsr:@nashaddams/amqp";
+
+const connection = await connect({
+  hostname: "127.0.0.1",
+  port: 5671,
+  key: "...",
+  cert: "...",
+  caCerts: ["..."],
+});
+
+// ...
 ```
 
 ## Testing
