@@ -1,6 +1,6 @@
 {
   "name": "@nashaddams/amqp",
-  "version": "0.2.1",
+  "version": "1.0.0",
   "exports": "./mod.ts",
   "tasks": {
     "cache": "deno install --lock deno.lock && deno install --entrypoint deps_dev.ts",
