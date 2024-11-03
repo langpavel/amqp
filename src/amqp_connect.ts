@@ -6,7 +6,7 @@ import {
   parseOptions,
 } from "./amqp_connect_options.ts";
 
-export type { AmqpConnectOptions };
+export type { AmqpConnectOptions, AmqpConnectTlsOptions };
 
 export async function connect(): Promise<AmqpConnection>;
 export async function connect(
@@ -23,7 +23,7 @@ export async function connect(
 ): Promise<AmqpConnection> {
   const {
     hostname = Deno.env.get("AMQP_HOSTNAME") || "localhost",
-    port = Number(Deno.env.get("AMQP_PORT")) || 5672,
+    port = Number(Deno.env.get("AMQP_PORT")) || tlsOptions ? 5671 : 5672,
     username = Deno.env.get("AMQP_USERNAME") || "guest",
     password = Deno.env.get("AMQP_PASSWORD") || "guest",
     vhost = Deno.env.get("AMQP_VHOST") || "/",
@@ -44,6 +44,7 @@ export async function connect(
     frameMax,
     loglevel,
     vhost,
+    mechanism: tlsOptions ? "EXTERNAL" : "PLAIN",
   });
 
   await connection.open();

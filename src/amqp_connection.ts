@@ -31,11 +31,15 @@ export interface AmqpConnectionOptions {
   heartbeatInterval?: number;
   frameMax?: number;
   loglevel: "debug" | "none";
+  mechanism?: string;
 }
 
 const NULL_CHAR = String.fromCharCode(0);
 function credentials(username: string, password: string) {
   return `${NULL_CHAR}${username}${NULL_CHAR}${password}`;
+}
+function credentialsExternal() {
+  return `${NULL_CHAR}`;
 }
 
 const clientProperties = Object.freeze({
@@ -64,6 +68,7 @@ export class AmqpConnection implements AmqpConnection {
   #username: string;
   #password: string;
   #vhost: string;
+  #mechanism: string;
   #closedPromise: ResolvablePromise<void>;
   #options: AmqpConnectionOptions;
   #socket: AmqpSocket;
@@ -76,6 +81,7 @@ export class AmqpConnection implements AmqpConnection {
     this.#username = options.username;
     this.#password = options.password;
     this.#vhost = options.vhost || "/";
+    this.#mechanism = options.mechanism || "PLAIN";
     this.#closedPromise = createResolvable<void>();
 
     this.#mux.receive(0, CONNECTION, CONNECTION_CLOSE)
@@ -96,7 +102,10 @@ export class AmqpConnection implements AmqpConnection {
   #handleStart = async (_args: ConnectionStart) => {
     await this.#mux.send(0, CONNECTION, CONNECTION_START_OK, {
       clientProperties,
-      response: credentials(this.#username, this.#password),
+      mechanism: this.#mechanism,
+      response: this.#mechanism === "EXTERNAL"
+        ? credentialsExternal()
+        : credentials(this.#username, this.#password),
     });
   };
 

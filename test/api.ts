@@ -1,6 +1,7 @@
 import {
   type AmqpConnection,
   type AmqpConnectOptions,
+  type AmqpConnectTlsOptions,
   connect,
 } from "../mod.ts";
 
@@ -79,6 +80,7 @@ function tryCheckEnv(name: string) {
 export function withConnection(
   tester: AmqpConnectionTest,
   options: AmqpConnectOptions = {},
+  tlsOptions?: AmqpConnectTlsOptions,
 ): () => Promise<void> {
   return async () => {
     const connection = await connect({
@@ -86,7 +88,7 @@ export function withConnection(
       heartbeatInterval: 0,
       hostname: "127.0.0.1",
       ...options,
-    });
+    }, tlsOptions);
 
     try {
       await tester(connection);

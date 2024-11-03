@@ -56,9 +56,10 @@ podman run -d --rm \
   -p 5671:5671 \
   -p 5672:5672 \
   -v ./test/conf/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf \
+  -v ./test/conf/enabled_plugins:/etc/rabbitmq/enabled_plugins \
   -v ./test/cert/ca_certificate.pem:/etc/ssl/certs/rabbitmq/ca_certificate.pem \
-  -v ./test/cert/server_certificate.pem:/etc/ssl/certs/rabbitmq/server_certificate.pem \
-  -v ./test/cert/server_key.pem:/etc/ssl/certs/rabbitmq/server_key.pem \
+  -v ./test/cert/server_guest_certificate.pem:/etc/ssl/certs/rabbitmq/server_guest_certificate.pem \
+  -v ./test/cert/server_guest_key.pem:/etc/ssl/certs/rabbitmq/server_guest_key.pem \
   rabbitmq:4-management
 
 deno task test
@@ -73,14 +74,13 @@ The certificates are generated with
 ```sh
 git clone https://github.com/rabbitmq/tls-gen.git
 cd basic
-make
-make alias-leaf-artifacts
+make CN=guest
 
 result/ca_certificate.pem
-result/client_certificate.pem
-result/client_key.pem
-result/server_certificate.pem
-result/server_key.pem
+result/client_guest_certificate.pem
+result/client_guest_key.pem
+result/server_guest_certificate.pem
+result/server_guest_key.pem
 ```
 
 ## Acknowledgments

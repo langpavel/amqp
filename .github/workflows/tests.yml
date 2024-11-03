@@ -28,9 +28,10 @@ jobs:
       - name: Mount RabbitMQ config files
         run: |
           docker cp ./test/conf/rabbitmq.conf rabbitmq:/etc/rabbitmq/rabbitmq.conf
+          docker cp ./test/conf/enabled_plugins rabbitmq:/etc/rabbitmq/enabled_plugins
           docker cp ./test/cert/ca_certificate.pem rabbitmq:/etc/ssl/certs/rabbitmq/ca_certificate.pem
-          docker cp ./test/cert/server_certificate.pem rabbitmq:/etc/ssl/certs/rabbitmq/server_certificate.pem
-          docker cp ./test/cert/server_key.pem rabbitmq:/etc/ssl/certs/rabbitmq/server_key.pem
+          docker cp ./test/cert/server_guest_certificate.pem rabbitmq:/etc/ssl/certs/rabbitmq/server_guest_certificate.pem
+          docker cp ./test/cert/server_guest_key.pem rabbitmq:/etc/ssl/certs/rabbitmq/server_guest_key.pem
           docker restart rabbitmq
       - name: Setup Deno
         uses: denoland/setup-deno@v2

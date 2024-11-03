@@ -248,3 +248,38 @@ Deno.test(
     );
   }),
 );
+
+Deno.test(
+  "consume queue with ack tls",
+  withConnection(async (conn) => {
+    const channel = await conn.openChannel();
+
+    const { queue } = await channel.declareQueue({ autoDelete: true });
+    const promise = createResolvable<
+      [BasicDeliverArgs, BasicProperties, Uint8Array]
+    >();
+
+    await channel.consume({ queue }, async (args, props, content) => {
+      await channel.ack({ deliveryTag: args.deliveryTag });
+      promise.resolve([args, props, content]);
+    });
+
+    const now = Date.now();
+    await channel.publish(
+      { routingKey: queue },
+      { timestamp: now },
+      encodeText(JSON.stringify({ foo: "bar" })),
+    );
+
+    const [_args, props, content] = await promise;
+    assertEquals(cleanObj(props), { timestamp: now });
+    assertEquals(JSON.parse(decodeText(content)), { foo: "bar" });
+  }, {
+    hostname: "127.0.0.1",
+    port: 5671,
+  }, {
+    key: Deno.readTextFileSync("test/cert/client_guest_key.pem"),
+    cert: Deno.readTextFileSync("test/cert/client_guest_certificate.pem"),
+    caCerts: [Deno.readTextFileSync("test/cert/ca_certificate.pem")],
+  }),
+);
