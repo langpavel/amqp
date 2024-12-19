@@ -15,7 +15,7 @@
     "@std/io/buffer": "jsr:@std/io@0.225.0/buffer",
     "@std/io/write-all": "jsr:@std/io@0.225.0/write-all",
     "@std/io/types": "jsr:@std/io@0.225.0/types",
-    "@std/streams": "jsr:@std/streams@1.0.7"
+    "@std/streams": "jsr:@std/streams@1.0.8"
   },
-  "lock": false
+  "lock": true
 }
