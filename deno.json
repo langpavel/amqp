@@ -17,5 +17,16 @@
     "@std/io/types": "jsr:@std/io@0.225.0/types",
     "@std/streams": "jsr:@std/streams@1.0.8"
   },
+  "publish": {
+    "include": [
+      "mod.ts",
+      "src/**/*.ts",
+      "LICENSE",
+      "README.md"
+    ],
+    "exclude": [
+      "src/**/*_test.ts"
+    ]
+  },
   "lock": false
 }
