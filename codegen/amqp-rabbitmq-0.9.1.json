@@ -5,7 +5,7 @@
   "revision": 1,
   "port": 5672,
   "copyright": [
-    "Copyright (C) 2008-2019 Pivotal Software, Inc, Inc.\n",
+    "Copyright (C) 2007-2024 Broadcom Inc. and its subsidiaries. All rights reserved.\n",
     "\n",
     "Permission is hereby granted, free of charge, to any person\n",
     "obtaining a copy of this file (the \"Software\"), to deal in the\n",
@@ -50,11 +50,13 @@
     ],
     [
       "consumer-tag",
-      "shortstr"
+      "shortstr",
+      "Identifier for the consumer, valid within the current channel."
     ],
     [
       "delivery-tag",
-      "longlong"
+      "longlong",
+      "The server-assigned and channel-specific delivery tag"
     ],
     [
       "destination",
@@ -66,7 +68,8 @@
     ],
     [
       "exchange-name",
-      "shortstr"
+      "shortstr",
+      "The exchange name is a client-selected string that identifies the exchange for publish methods."
     ],
     [
       "long",
@@ -82,7 +85,8 @@
     ],
     [
       "message-count",
-      "long"
+      "long",
+      "The number of messages in the queue, which will be zero for newly-declared queues. This is the number of messages present in the queue, and committed if the channel on which they were published is transacted, that are not waiting acknowledgement."
     ],
     [
       "method-id",
@@ -90,11 +94,13 @@
     ],
     [
       "no-ack",
-      "bit"
+      "bit",
+      "If this field is set the server does not expect acknowledgements for messages. That is, when a message is delivered to the client the server assumes the delivery will succeed and immediately dequeues it. This functionality may increase performance but at the cost of reliability. Messages can get lost if a client dies before they are delivered to the application."
     ],
     [
       "no-local",
-      "bit"
+      "bit",
+      "If the no-local field is set the server will not send messages to the connection that published them."
     ],
     [
       "octet",
@@ -106,19 +112,23 @@
     ],
     [
       "path",
-      "shortstr"
+      "shortstr",
+      "Unconstrained."
     ],
     [
       "peer-properties",
-      "table"
+      "table",
+      "This table provides a set of peer properties, used for identification, debugging, and general information."
     ],
     [
       "queue-name",
-      "shortstr"
+      "shortstr",
+      "The queue name identifies the queue within the vhost. In methods where the queue name may be blank, and that has no specific significance, this refers to the 'current' queue for the channel, meaning the last queue that the client declared on the channel. If the client did not declare a queue, and the method needs a queue name, this will result in a 502 (syntax error) channel exception."
     ],
     [
       "redelivered",
-      "bit"
+      "bit",
+      "This indicates that the message has been previously delivered to this or another client."
     ],
     [
       "reference",
@@ -134,11 +144,13 @@
     ],
     [
       "reply-code",
-      "short"
+      "short",
+      "The reply code. The AMQ reply codes are defined as constants at the start of this formal specification."
     ],
     [
       "reply-text",
-      "shortstr"
+      "shortstr",
+      "The localised reply text. This text can be logged as an aid to resolving issues."
     ],
     [
       "security-token",
@@ -188,12 +200,14 @@
     },
     {
       "name": "REPLY-SUCCESS",
-      "value": 200
+      "value": 200,
+      "doc": "Indicates that the method completed successfully. This reply code is reserved for future use - the current protocol design does not use positive confirmation and reply codes are sent only in case of an error."
     },
     {
       "name": "CONTENT-TOO-LARGE",
       "value": 311,
-      "class": "soft-error"
+      "class": "soft-error",
+      "doc": "The client attempted to transfer content larger than the server could accept at the present time. The client may retry at a later time."
     },
     {
       "name": "NO-ROUTE",
@@ -203,837 +217,101 @@
     {
       "name": "NO-CONSUMERS",
       "value": 313,
-      "class": "soft-error"
+      "class": "soft-error",
+      "doc": "When the exchange cannot deliver to a consumer when the immediate flag is set. As a result of pending data on the queue or the absence of any consumers of the queue."
     },
     {
       "name": "ACCESS-REFUSED",
       "value": 403,
-      "class": "soft-error"
+      "class": "soft-error",
+      "doc": "The client attempted to work with a server entity to which it has no access due to security settings."
     },
     {
       "name": "NOT-FOUND",
       "value": 404,
-      "class": "soft-error"
+      "class": "soft-error",
+      "doc": "The client attempted to work with a server entity that does not exist."
     },
     {
       "name": "RESOURCE-LOCKED",
       "value": 405,
-      "class": "soft-error"
+      "class": "soft-error",
+      "doc": "The client attempted to work with a server entity to which it has no access because another client is working with it."
     },
     {
       "name": "PRECONDITION-FAILED",
       "value": 406,
-      "class": "soft-error"
+      "class": "soft-error",
+      "doc": "The client requested a method that was not allowed because some precondition failed."
     },
     {
       "name": "CONNECTION-FORCED",
       "value": 320,
-      "class": "hard-error"
+      "class": "hard-error",
+      "doc": "An operator intervened to close the connection for some reason. The client may retry at some later date."
     },
     {
       "name": "INVALID-PATH",
       "value": 402,
-      "class": "hard-error"
+      "class": "hard-error",
+      "doc": "The client tried to work with an unknown virtual host."
     },
     {
       "name": "FRAME-ERROR",
       "value": 501,
-      "class": "hard-error"
+      "class": "hard-error",
+      "doc": "The sender sent a malformed frame that the recipient could not decode. This strongly implies a programming error in the sending peer."
     },
     {
       "name": "SYNTAX-ERROR",
       "value": 502,
-      "class": "hard-error"
+      "class": "hard-error",
+      "doc": "The sender sent a frame that contained illegal values for one or more fields. This strongly implies a programming error in the sending peer."
     },
     {
       "name": "COMMAND-INVALID",
       "value": 503,
-      "class": "hard-error"
+      "class": "hard-error",
+      "doc": "The client sent an invalid sequence of frames, attempting to perform an operation that was considered invalid by the server. This usually implies a programming error in the client."
     },
     {
       "name": "CHANNEL-ERROR",
       "value": 504,
-      "class": "hard-error"
+      "class": "hard-error",
+      "doc": "The client attempted to work with a channel that had not been correctly opened. This most likely indicates a fault in the client layer."
     },
     {
       "name": "UNEXPECTED-FRAME",
       "value": 505,
-      "class": "hard-error"
+      "class": "hard-error",
+      "doc": "The peer sent a frame that was not expected, usually in the context of a content header and body. This strongly indicates a fault in the peer's content processing."
     },
     {
       "name": "RESOURCE-ERROR",
       "value": 506,
-      "class": "hard-error"
+      "class": "hard-error",
+      "doc": "The server could not complete the method because it lacked sufficient resources. This may be due to the client creating too many of some type of entity."
     },
     {
       "name": "NOT-ALLOWED",
       "value": 530,
-      "class": "hard-error"
+      "class": "hard-error",
+      "doc": "The client tried to work with some entity in a manner that is prohibited by the server, due to security settings or by some other criteria."
     },
     {
       "name": "NOT-IMPLEMENTED",
       "value": 540,
-      "class": "hard-error"
+      "class": "hard-error",
+      "doc": "The client tried to use functionality that is not implemented in the server."
     },
     {
       "name": "INTERNAL-ERROR",
       "value": 541,
-      "class": "hard-error"
+      "class": "hard-error",
+      "doc": "The server could not complete the method because of an internal error. The server may require intervention by an operator in order to resume normal operations."
     }
   ],
   "classes": [
-    {
-      "id": 10,
-      "methods": [
-        {
-          "id": 10,
-          "arguments": [
-            {
-              "type": "octet",
-              "name": "version-major",
-              "default-value": 0
-            },
-            {
-              "type": "octet",
-              "name": "version-minor",
-              "default-value": 9
-            },
-            {
-              "domain": "peer-properties",
-              "name": "server-properties"
-            },
-            {
-              "type": "longstr",
-              "name": "mechanisms",
-              "default-value": "PLAIN"
-            },
-            {
-              "type": "longstr",
-              "name": "locales",
-              "default-value": "en_US"
-            }
-          ],
-          "name": "start",
-          "synchronous": true
-        },
-        {
-          "id": 11,
-          "arguments": [
-            {
-              "domain": "peer-properties",
-              "name": "client-properties"
-            },
-            {
-              "type": "shortstr",
-              "name": "mechanism",
-              "default-value": "PLAIN"
-            },
-            {
-              "type": "longstr",
-              "name": "response"
-            },
-            {
-              "type": "shortstr",
-              "name": "locale",
-              "default-value": "en_US"
-            }
-          ],
-          "name": "start-ok"
-        },
-        {
-          "id": 20,
-          "arguments": [
-            {
-              "type": "longstr",
-              "name": "challenge"
-            }
-          ],
-          "name": "secure",
-          "synchronous": true
-        },
-        {
-          "id": 21,
-          "arguments": [
-            {
-              "type": "longstr",
-              "name": "response"
-            }
-          ],
-          "name": "secure-ok"
-        },
-        {
-          "id": 30,
-          "arguments": [
-            {
-              "type": "short",
-              "name": "channel-max",
-              "default-value": 0
-            },
-            {
-              "type": "long",
-              "name": "frame-max",
-              "default-value": 0
-            },
-            {
-              "type": "short",
-              "name": "heartbeat",
-              "default-value": 0
-            }
-          ],
-          "name": "tune",
-          "synchronous": true
-        },
-        {
-          "id": 31,
-          "arguments": [
-            {
-              "type": "short",
-              "name": "channel-max",
-              "default-value": 0
-            },
-            {
-              "type": "long",
-              "name": "frame-max",
-              "default-value": 0
-            },
-            {
-              "type": "short",
-              "name": "heartbeat",
-              "default-value": 0
-            }
-          ],
-          "name": "tune-ok"
-        },
-        {
-          "id": 40,
-          "arguments": [
-            {
-              "type": "shortstr",
-              "name": "virtual-host",
-              "default-value": "/"
-            },
-            {
-              "type": "shortstr",
-              "name": "capabilities",
-              "default-value": ""
-            },
-            {
-              "type": "bit",
-              "name": "insist",
-              "default-value": false
-            }
-          ],
-          "name": "open",
-          "synchronous": true
-        },
-        {
-          "id": 41,
-          "arguments": [
-            {
-              "type": "shortstr",
-              "name": "known-hosts",
-              "default-value": ""
-            }
-          ],
-          "name": "open-ok"
-        },
-        {
-          "id": 50,
-          "arguments": [
-            {
-              "type": "short",
-              "name": "reply-code"
-            },
-            {
-              "type": "shortstr",
-              "name": "reply-text",
-              "default-value": ""
-            },
-            {
-              "type": "short",
-              "name": "class-id"
-            },
-            {
-              "type": "short",
-              "name": "method-id"
-            }
-          ],
-          "name": "close",
-          "synchronous": true
-        },
-        {
-          "id": 51,
-          "arguments": [],
-          "name": "close-ok"
-        },
-        {
-          "id": 60,
-          "arguments": [
-            {
-              "type": "shortstr",
-              "name": "reason",
-              "default-value": ""
-            }
-          ],
-          "name": "blocked"
-        },
-        {
-          "id": 61,
-          "arguments": [],
-          "name": "unblocked"
-        },
-        {
-          "id": 70,
-          "arguments": [
-            {
-              "type": "longstr",
-              "name": "new-secret"
-            },
-            {
-              "type": "shortstr",
-              "name": "reason"
-            }
-          ],
-          "name": "update-secret",
-          "synchronous": true
-        },
-        {
-          "id": 71,
-          "arguments": [],
-          "name": "update-secret-ok"
-        }
-      ],
-      "name": "connection",
-      "properties": []
-    },
-    {
-      "id": 20,
-      "methods": [
-        {
-          "id": 10,
-          "arguments": [
-            {
-              "type": "shortstr",
-              "name": "out-of-band",
-              "default-value": ""
-            }
-          ],
-          "name": "open",
-          "synchronous": true
-        },
-        {
-          "id": 11,
-          "arguments": [
-            {
-              "type": "longstr",
-              "name": "channel-id",
-              "default-value": ""
-            }
-          ],
-          "name": "open-ok"
-        },
-        {
-          "id": 20,
-          "arguments": [
-            {
-              "type": "bit",
-              "name": "active"
-            }
-          ],
-          "name": "flow",
-          "synchronous": true
-        },
-        {
-          "id": 21,
-          "arguments": [
-            {
-              "type": "bit",
-              "name": "active"
-            }
-          ],
-          "name": "flow-ok"
-        },
-        {
-          "id": 40,
-          "arguments": [
-            {
-              "type": "short",
-              "name": "reply-code"
-            },
-            {
-              "type": "shortstr",
-              "name": "reply-text",
-              "default-value": ""
-            },
-            {
-              "type": "short",
-              "name": "class-id"
-            },
-            {
-              "type": "short",
-              "name": "method-id"
-            }
-          ],
-          "name": "close",
-          "synchronous": true
-        },
-        {
-          "id": 41,
-          "arguments": [],
-          "name": "close-ok"
-        }
-      ],
-      "name": "channel"
-    },
-    {
-      "id": 30,
-      "methods": [
-        {
-          "id": 10,
-          "arguments": [
-            {
-              "type": "shortstr",
-              "name": "realm",
-              "default-value": "/data"
-            },
-            {
-              "type": "bit",
-              "name": "exclusive",
-              "default-value": false
-            },
-            {
-              "type": "bit",
-              "name": "passive",
-              "default-value": true
-            },
-            {
-              "type": "bit",
-              "name": "active",
-              "default-value": true
-            },
-            {
-              "type": "bit",
-              "name": "write",
-              "default-value": true
-            },
-            {
-              "type": "bit",
-              "name": "read",
-              "default-value": true
-            }
-          ],
-          "name": "request",
-          "synchronous": true
-        },
-        {
-          "id": 11,
-          "arguments": [
-            {
-              "type": "short",
-              "name": "ticket",
-              "default-value": 1
-            }
-          ],
-          "name": "request-ok"
-        }
-      ],
-      "name": "access"
-    },
-    {
-      "id": 40,
-      "methods": [
-        {
-          "id": 10,
-          "arguments": [
-            {
-              "type": "short",
-              "name": "ticket",
-              "default-value": 0
-            },
-            {
-              "domain": "exchange-name",
-              "name": "exchange"
-            },
-            {
-              "type": "shortstr",
-              "name": "type",
-              "default-value": "direct"
-            },
-            {
-              "type": "bit",
-              "name": "passive",
-              "default-value": false
-            },
-            {
-              "type": "bit",
-              "name": "durable",
-              "default-value": false
-            },
-            {
-              "type": "bit",
-              "name": "auto-delete",
-              "default-value": false
-            },
-            {
-              "type": "bit",
-              "name": "internal",
-              "default-value": false
-            },
-            {
-              "type": "bit",
-              "name": "nowait",
-              "default-value": false
-            },
-            {
-              "type": "table",
-              "name": "arguments",
-              "default-value": {}
-            }
-          ],
-          "name": "declare",
-          "synchronous": true
-        },
-        {
-          "id": 11,
-          "arguments": [],
-          "name": "declare-ok"
-        },
-        {
-          "id": 20,
-          "arguments": [
-            {
-              "type": "short",
-              "name": "ticket",
-              "default-value": 0
-            },
-            {
-              "domain": "exchange-name",
-              "name": "exchange"
-            },
-            {
-              "type": "bit",
-              "name": "if-unused",
-              "default-value": false
-            },
-            {
-              "type": "bit",
-              "name": "nowait",
-              "default-value": false
-            }
-          ],
-          "name": "delete",
-          "synchronous": true
-        },
-        {
-          "id": 21,
-          "arguments": [],
-          "name": "delete-ok"
-        },
-        {
-          "id": 30,
-          "arguments": [
-            {
-              "type": "short",
-              "name": "ticket",
-              "default-value": 0
-            },
-            {
-              "domain": "exchange-name",
-              "name": "destination"
-            },
-            {
-              "domain": "exchange-name",
-              "name": "source"
-            },
-            {
-              "type": "shortstr",
-              "name": "routing-key",
-              "default-value": ""
-            },
-            {
-              "type": "bit",
-              "name": "nowait",
-              "default-value": false
-            },
-            {
-              "type": "table",
-              "name": "arguments",
-              "default-value": {}
-            }
-          ],
-          "name": "bind",
-          "synchronous": true
-        },
-        {
-          "id": 31,
-          "arguments": [],
-          "name": "bind-ok"
-        },
-        {
-          "id": 40,
-          "arguments": [
-            {
-              "type": "short",
-              "name": "ticket",
-              "default-value": 0
-            },
-            {
-              "domain": "exchange-name",
-              "name": "destination"
-            },
-            {
-              "domain": "exchange-name",
-              "name": "source"
-            },
-            {
-              "type": "shortstr",
-              "name": "routing-key",
-              "default-value": ""
-            },
-            {
-              "type": "bit",
-              "name": "nowait",
-              "default-value": false
-            },
-            {
-              "type": "table",
-              "name": "arguments",
-              "default-value": {}
-            }
-          ],
-          "name": "unbind",
-          "synchronous": true
-        },
-        {
-          "id": 51,
-          "arguments": [],
-          "name": "unbind-ok"
-        }
-      ],
-      "name": "exchange"
-    },
-    {
-      "id": 50,
-      "methods": [
-        {
-          "id": 10,
-          "arguments": [
-            {
-              "type": "short",
-              "name": "ticket",
-              "default-value": 0
-            },
-            {
-              "domain": "queue-name",
-              "name": "queue",
-              "default-value": ""
-            },
-            {
-              "type": "bit",
-              "name": "passive",
-              "default-value": false
-            },
-            {
-              "type": "bit",
-              "name": "durable",
-              "default-value": false
-            },
-            {
-              "type": "bit",
-              "name": "exclusive",
-              "default-value": false
-            },
-            {
-              "type": "bit",
-              "name": "auto-delete",
-              "default-value": false
-            },
-            {
-              "type": "bit",
-              "name": "nowait",
-              "default-value": false
-            },
-            {
-              "type": "table",
-              "name": "arguments",
-              "default-value": {}
-            }
-          ],
-          "name": "declare",
-          "synchronous": true
-        },
-        {
-          "id": 11,
-          "arguments": [
-            {
-              "domain": "queue-name",
-              "name": "queue"
-            },
-            {
-              "domain": "message-count",
-              "name": "message-count"
-            },
-            {
-              "type": "long",
-              "name": "consumer-count"
-            }
-          ],
-          "name": "declare-ok"
-        },
-        {
-          "id": 20,
-          "arguments": [
-            {
-              "type": "short",
-              "name": "ticket",
-              "default-value": 0
-            },
-            {
-              "domain": "queue-name",
-              "name": "queue",
-              "default-value": ""
-            },
-            {
-              "domain": "exchange-name",
-              "name": "exchange"
-            },
-            {
-              "type": "shortstr",
-              "name": "routing-key",
-              "default-value": ""
-            },
-            {
-              "type": "bit",
-              "name": "nowait",
-              "default-value": false
-            },
-            {
-              "type": "table",
-              "name": "arguments",
-              "default-value": {}
-            }
-          ],
-          "name": "bind",
-          "synchronous": true
-        },
-        {
-          "id": 21,
-          "arguments": [],
-          "name": "bind-ok"
-        },
-        {
-          "id": 30,
-          "arguments": [
-            {
-              "type": "short",
-              "name": "ticket",
-              "default-value": 0
-            },
-            {
-              "domain": "queue-name",
-              "name": "queue",
-              "default-value": ""
-            },
-            {
-              "type": "bit",
-              "name": "nowait",
-              "default-value": false
-            }
-          ],
-          "name": "purge",
-          "synchronous": true
-        },
-        {
-          "id": 31,
-          "arguments": [
-            {
-              "domain": "message-count",
-              "name": "message-count"
-            }
-          ],
-          "name": "purge-ok"
-        },
-        {
-          "id": 40,
-          "arguments": [
-            {
-              "type": "short",
-              "name": "ticket",
-              "default-value": 0
-            },
-            {
-              "domain": "queue-name",
-              "name": "queue",
-              "default-value": ""
-            },
-            {
-              "type": "bit",
-              "name": "if-unused",
-              "default-value": false
-            },
-            {
-              "type": "bit",
-              "name": "if-empty",
-              "default-value": false
-            },
-            {
-              "type": "bit",
-              "name": "nowait",
-              "default-value": false
-            }
-          ],
-          "name": "delete",
-          "synchronous": true
-        },
-        {
-          "id": 41,
-          "arguments": [
-            {
-              "domain": "message-count",
-              "name": "message-count"
-            }
-          ],
-          "name": "delete-ok"
-        },
-        {
-          "id": 50,
-          "arguments": [
-            {
-              "type": "short",
-              "name": "ticket",
-              "default-value": 0
-            },
-            {
-              "domain": "queue-name",
-              "name": "queue",
-              "default-value": ""
-            },
-            {
-              "domain": "exchange-name",
-              "name": "exchange"
-            },
-            {
-              "type": "shortstr",
-              "name": "routing-key",
-              "default-value": ""
-            },
-            {
-              "type": "table",
-              "name": "arguments",
-              "default-value": {}
-            }
-          ],
-          "name": "unbind",
-          "synchronous": true
-        },
-        {
-          "id": 51,
-          "arguments": [],
-          "name": "unbind-ok"
-        }
-      ],
-      "name": "queue"
-    },
     {
       "id": 60,
       "methods": [
@@ -1043,26 +321,31 @@
             {
               "type": "long",
               "name": "prefetch-size",
-              "default-value": 0
+              "default-value": 0,
+              "doc": "The client can request that messages be sent in advance so that when the client finishes processing a message, the following message is already held locally, rather than needing to be sent down the channel. Prefetching gives a performance improvement. This field specifies the prefetch window size in octets. The server will send a message in advance if it is equal to or smaller in size than the available prefetch size (and also falls into other prefetch limits). May be set to zero, meaning no specific limit, although other prefetch limits may still apply. The prefetch-size is ignored if the no-ack option is set."
             },
             {
               "type": "short",
               "name": "prefetch-count",
-              "default-value": 0
+              "default-value": 0,
+              "doc": "Specifies a prefetch window in terms of whole messages. This field may be used in combination with the prefetch-size field; a message will only be sent in advance if both prefetch windows (and those at the channel and connection level) allow it. The prefetch-count is ignored if the no-ack option is set."
             },
             {
               "type": "bit",
               "name": "global",
-              "default-value": false
+              "default-value": false,
+              "doc": "By default the QoS settings apply to the current channel only. If this field is set, they are applied to the entire connection."
             }
           ],
           "name": "qos",
-          "synchronous": true
+          "synchronous": true,
+          "doc": "This method requests a specific quality of service. The QoS can be specified for the current channel or for all channels on the connection. The particular properties and semantics of a qos method always depend on the content class semantics. Though the qos method could in principle apply to both peers, it is currently meaningful only for the server."
         },
         {
           "id": 11,
           "arguments": [],
-          "name": "qos-ok"
+          "name": "qos-ok",
+          "doc": "This method tells the client that the requested QoS levels could be handled by the server. The requested QoS applies to all active consumers until a new QoS is defined."
         },
         {
           "id": 20,
@@ -1075,12 +358,14 @@
             {
               "domain": "queue-name",
               "name": "queue",
-              "default-value": ""
+              "default-value": "",
+              "doc": "Specifies the name of the queue to consume from."
             },
             {
               "type": "shortstr",
               "name": "consumer-tag",
-              "default-value": ""
+              "default-value": "",
+              "doc": "Specifies the identifier for the consumer. The consumer tag is local to a channel, so two clients can use the same consumer tags. If this field is empty the server will generate a unique tag."
             },
             {
               "type": "bit",
@@ -1095,7 +380,8 @@
             {
               "type": "bit",
               "name": "exclusive",
-              "default-value": false
+              "default-value": false,
+              "doc": "Request exclusive consumer access, meaning only this consumer can access the queue."
             },
             {
               "type": "bit",
@@ -1105,21 +391,25 @@
             {
               "type": "table",
               "name": "arguments",
-              "default-value": {}
+              "default-value": {},
+              "doc": "A set of arguments for the consume. The syntax and semantics of these arguments depends on the server implementation."
             }
           ],
           "name": "consume",
-          "synchronous": true
+          "synchronous": true,
+          "doc": "This method asks the server to start a consumer, which is a transient request for messages from a specific queue. Consumers last as long as the channel they were declared on, or until the client cancels them."
         },
         {
           "id": 21,
           "arguments": [
             {
               "type": "shortstr",
-              "name": "consumer-tag"
+              "name": "consumer-tag",
+              "doc": "Holds the consumer tag specified by the client or provided by the server."
             }
           ],
-          "name": "consume-ok"
+          "name": "consume-ok",
+          "doc": "The server provides the client with a consumer tag, which is used by the client for methods called on the consumer at a later stage."
         },
         {
           "id": 30,
@@ -1135,7 +425,8 @@
             }
           ],
           "name": "cancel",
-          "synchronous": true
+          "synchronous": true,
+          "doc": "This method cancels a consumer. This does not affect already delivered messages, but it does mean the server will not send any more messages for that consumer. The client may receive an arbitrary number of messages in between sending the cancel method and receiving the cancel-ok reply."
         },
         {
           "id": 31,
@@ -1145,7 +436,8 @@
               "name": "consumer-tag"
             }
           ],
-          "name": "cancel-ok"
+          "name": "cancel-ok",
+          "doc": "This method confirms that the cancellation was completed."
         },
         {
           "content": true,
@@ -1159,25 +451,30 @@
             {
               "domain": "exchange-name",
               "name": "exchange",
-              "default-value": ""
+              "default-value": "",
+              "doc": "Specifies the name of the exchange to publish to. The exchange name can be empty, meaning the default exchange. If the exchange name is specified, and that exchange does not exist, the server will raise a channel exception."
             },
             {
               "type": "shortstr",
               "name": "routing-key",
-              "default-value": ""
+              "default-value": "",
+              "doc": "Specifies the routing key for the message. The routing key is used for routing messages depending on the exchange configuration."
             },
             {
               "type": "bit",
               "name": "mandatory",
-              "default-value": false
+              "default-value": false,
+              "doc": "This flag tells the server how to react if the message cannot be routed to a queue. If this flag is set, the server will return an unroutable message with a Return method. If this flag is zero, the server silently drops the message."
             },
             {
               "type": "bit",
               "name": "immediate",
-              "default-value": false
+              "default-value": false,
+              "doc": "This flag tells the server how to react if the message cannot be routed to a queue consumer immediately. If this flag is set, the server will return an undeliverable message with a Return method. If this flag is zero, the server will queue the message, but with no guarantee that it will ever be consumed."
             }
           ],
-          "name": "publish"
+          "name": "publish",
+          "doc": "This method publishes a message to a specific exchange. The message will be routed to queues as defined by the exchange configuration and distributed to any active consumers when the transaction, if any, is committed."
         },
         {
           "content": true,
@@ -1194,14 +491,17 @@
             },
             {
               "domain": "exchange-name",
-              "name": "exchange"
+              "name": "exchange",
+              "doc": "Specifies the name of the exchange that the message was originally published to. May be empty, meaning the default exchange."
             },
             {
               "type": "shortstr",
-              "name": "routing-key"
+              "name": "routing-key",
+              "doc": "Specifies the routing key name specified when the message was published."
             }
           ],
-          "name": "return"
+          "name": "return",
+          "doc": "This method returns an undeliverable message that was published with the immediate flag set, or an unroutable message published with the mandatory flag set. The reply code and text provide information about the reason that the message was undeliverable."
         },
         {
           "content": true,
@@ -1222,14 +522,17 @@
             },
             {
               "domain": "exchange-name",
-              "name": "exchange"
+              "name": "exchange",
+              "doc": "Specifies the name of the exchange that the message was originally published to. May be empty, indicating the default exchange."
             },
             {
               "type": "shortstr",
-              "name": "routing-key"
+              "name": "routing-key",
+              "doc": "Specifies the routing key name specified when the message was published."
             }
           ],
-          "name": "deliver"
+          "name": "deliver",
+          "doc": "This method delivers a message to the client, via a consumer. In the asynchronous message delivery model, the client starts a consumer using the Consume method, then the server responds with Deliver methods as and when messages arrive for that consumer."
         },
         {
           "id": 70,
@@ -1242,7 +545,8 @@
             {
               "domain": "queue-name",
               "name": "queue",
-              "default-value": ""
+              "default-value": "",
+              "doc": "Specifies the name of the queue to get a message from."
             },
             {
               "type": "bit",
@@ -1251,7 +555,8 @@
             }
           ],
           "name": "get",
-          "synchronous": true
+          "synchronous": true,
+          "doc": "This method provides a direct access to the messages in a queue using a synchronous dialogue that is designed for specific types of application where synchronous functionality is more important than performance."
         },
         {
           "content": true,
@@ -1268,18 +573,21 @@
             },
             {
               "domain": "exchange-name",
-              "name": "exchange"
+              "name": "exchange",
+              "doc": "Specifies the name of the exchange that the message was originally published to. If empty, the message was published to the default exchange."
             },
             {
               "type": "shortstr",
-              "name": "routing-key"
+              "name": "routing-key",
+              "doc": "Specifies the routing key name specified when the message was published."
             },
             {
               "domain": "message-count",
               "name": "message-count"
             }
           ],
-          "name": "get-ok"
+          "name": "get-ok",
+          "doc": "This method delivers a message to the client following a get method. A message delivered by 'get-ok' must be acknowledged unless the no-ack option was set in the get method."
         },
         {
           "id": 72,
@@ -1290,7 +598,8 @@
               "default-value": ""
             }
           ],
-          "name": "get-empty"
+          "name": "get-empty",
+          "doc": "This method tells the client that the queue has no messages available for the client."
         },
         {
           "id": 80,
@@ -1303,10 +612,12 @@
             {
               "type": "bit",
               "name": "multiple",
-              "default-value": false
+              "default-value": false,
+              "doc": "If set to 1, the delivery tag is treated as up to and including, so that the client can acknowledge multiple messages with a single method. If set to zero, the delivery tag refers to a single message. If the multiple field is 1, and the delivery tag is zero, tells the server to acknowledge all outstanding messages."
             }
           ],
-          "name": "ack"
+          "name": "ack",
+          "doc": "This method acknowledges one or more messages delivered via the Deliver or Get-Ok methods. The client can ask to confirm a single message or a set of messages up to and including a specific message."
         },
         {
           "id": 90,
@@ -1318,10 +629,12 @@
             {
               "type": "bit",
               "name": "requeue",
-              "default-value": true
+              "default-value": true,
+              "doc": "If requeue is true, the server will attempt to requeue the message. If requeue is false or the requeue attempt fails the messages are discarded or dead-lettered."
             }
           ],
-          "name": "reject"
+          "name": "reject",
+          "doc": "This method allows a client to reject a message. It can be used to interrupt and cancel large incoming messages, or return untreatable messages to their original queue."
         },
         {
           "id": 100,
@@ -1329,10 +642,12 @@
             {
               "type": "bit",
               "name": "requeue",
-              "default-value": false
+              "default-value": false,
+              "doc": "If this field is zero, the message will be redelivered to the original recipient. If this bit is 1, the server will attempt to requeue the message, potentially then delivering it to an alternative subscriber."
             }
           ],
-          "name": "recover-async"
+          "name": "recover-async",
+          "doc": "This method asks the server to redeliver all unacknowledged messages on a specified channel. Zero or more messages may be redelivered. This method is deprecated in favour of the synchronous Recover/Recover-Ok."
         },
         {
           "id": 110,
@@ -1340,16 +655,19 @@
             {
               "type": "bit",
               "name": "requeue",
-              "default-value": false
+              "default-value": false,
+              "doc": "If this field is zero, the message will be redelivered to the original recipient. If this bit is 1, the server will attempt to requeue the message, potentially then delivering it to an alternative subscriber."
             }
           ],
           "name": "recover",
-          "synchronous": true
+          "synchronous": true,
+          "doc": "This method asks the server to redeliver all unacknowledged messages on a specified channel. Zero or more messages may be redelivered. This method replaces the asynchronous Recover."
         },
         {
           "id": 111,
           "arguments": [],
-          "name": "recover-ok"
+          "name": "recover-ok",
+          "doc": "This method acknowledges a Basic.Recover method."
         },
         {
           "id": 120,
@@ -1431,7 +749,841 @@
           "type": "shortstr",
           "name": "cluster-id"
         }
-      ]
+      ],
+      "doc": "The Basic class provides methods that support an industry-standard messaging model."
+    },
+    {
+      "id": 10,
+      "methods": [
+        {
+          "id": 10,
+          "arguments": [
+            {
+              "type": "octet",
+              "name": "version-major",
+              "default-value": 0,
+              "doc": "The major version number can take any value from 0 to 99 as defined in the AMQP specification."
+            },
+            {
+              "type": "octet",
+              "name": "version-minor",
+              "default-value": 9,
+              "doc": "The minor version number can take any value from 0 to 99 as defined in the AMQP specification."
+            },
+            {
+              "domain": "peer-properties",
+              "name": "server-properties"
+            },
+            {
+              "type": "longstr",
+              "name": "mechanisms",
+              "default-value": "PLAIN",
+              "doc": "A list of the security mechanisms that the server supports, delimited by spaces."
+            },
+            {
+              "type": "longstr",
+              "name": "locales",
+              "default-value": "en_US",
+              "doc": "A list of the message locales that the server supports, delimited by spaces. The locale defines the language in which the server will send reply texts."
+            }
+          ],
+          "name": "start",
+          "synchronous": true,
+          "doc": "This method starts the connection negotiation process by telling the client the protocol version that the server proposes, along with a list of security mechanisms which the client can use for authentication."
+        },
+        {
+          "id": 11,
+          "arguments": [
+            {
+              "domain": "peer-properties",
+              "name": "client-properties"
+            },
+            {
+              "type": "shortstr",
+              "name": "mechanism",
+              "default-value": "PLAIN",
+              "doc": "A single security mechanisms selected by the client, which must be one of those specified by the server."
+            },
+            {
+              "type": "longstr",
+              "name": "response",
+              "doc": "A block of opaque data passed to the security mechanism. The contents of this data are defined by the SASL security mechanism."
+            },
+            {
+              "type": "shortstr",
+              "name": "locale",
+              "default-value": "en_US",
+              "doc": "A single message locale selected by the client, which must be one of those specified by the server."
+            }
+          ],
+          "name": "start-ok",
+          "doc": "This method selects a SASL security mechanism."
+        },
+        {
+          "id": 20,
+          "arguments": [
+            {
+              "type": "longstr",
+              "name": "challenge",
+              "doc": "Challenge information, a block of opaque binary data passed to the security mechanism."
+            }
+          ],
+          "name": "secure",
+          "synchronous": true,
+          "doc": "The SASL protocol works by exchanging challenges and responses until both peers have received sufficient information to authenticate each other. This method challenges the client to provide more information."
+        },
+        {
+          "id": 21,
+          "arguments": [
+            {
+              "type": "longstr",
+              "name": "response",
+              "doc": "A block of opaque data passed to the security mechanism. The contents of this data are defined by the SASL security mechanism."
+            }
+          ],
+          "name": "secure-ok",
+          "doc": "This method attempts to authenticate, passing a block of SASL data for the security mechanism at the server side."
+        },
+        {
+          "id": 30,
+          "arguments": [
+            {
+              "type": "short",
+              "name": "channel-max",
+              "default-value": 0,
+              "doc": "Specifies highest channel number that the server permits. Usable channel numbers are in the range 1..channel-max. Zero indicates no specified limit."
+            },
+            {
+              "type": "long",
+              "name": "frame-max",
+              "default-value": 0,
+              "doc": "The largest frame size that the server proposes for the connection, including frame header and end-byte. The client can negotiate a lower value. Zero means that the server does not impose any specific limit but may reject very large frames if it cannot allocate resources for them."
+            },
+            {
+              "type": "short",
+              "name": "heartbeat",
+              "default-value": 0,
+              "doc": "The delay, in seconds, of the connection heartbeat that the server wants. Zero means the server does not want a heartbeat."
+            }
+          ],
+          "name": "tune",
+          "synchronous": true,
+          "doc": "This method proposes a set of connection configuration values to the client. The client can accept and/or adjust these."
+        },
+        {
+          "id": 31,
+          "arguments": [
+            {
+              "type": "short",
+              "name": "channel-max",
+              "default-value": 0,
+              "doc": "The maximum total number of channels that the client will use per connection."
+            },
+            {
+              "type": "long",
+              "name": "frame-max",
+              "default-value": 0,
+              "doc": "The largest frame size that the client and server will use for the connection. Zero means that the client does not impose any specific limit but may reject very large frames if it cannot allocate resources for them. Note that the frame-max limit applies principally to content frames, where large contents can be broken into frames of arbitrary size."
+            },
+            {
+              "type": "short",
+              "name": "heartbeat",
+              "default-value": 0,
+              "doc": "The delay, in seconds, of the connection heartbeat that the client wants. Zero means the client does not want a heartbeat."
+            }
+          ],
+          "name": "tune-ok",
+          "doc": "This method sends the client's connection tuning parameters to the server. Certain fields are negotiated, others provide capability information."
+        },
+        {
+          "id": 40,
+          "arguments": [
+            {
+              "type": "shortstr",
+              "name": "virtual-host",
+              "default-value": "/",
+              "doc": "The name of the virtual host to work with."
+            },
+            {
+              "type": "shortstr",
+              "name": "capabilities",
+              "default-value": ""
+            },
+            {
+              "type": "bit",
+              "name": "insist",
+              "default-value": false
+            }
+          ],
+          "name": "open",
+          "synchronous": true,
+          "doc": "This method opens a connection to a virtual host, which is a collection of resources, and acts to separate multiple application domains within a server. The server may apply arbitrary limits per virtual host, such as the number of each type of entity that may be used, per connection and/or in total."
+        },
+        {
+          "id": 41,
+          "arguments": [
+            {
+              "type": "shortstr",
+              "name": "known-hosts",
+              "default-value": ""
+            }
+          ],
+          "name": "open-ok",
+          "doc": "This method signals to the client that the connection is ready for use."
+        },
+        {
+          "id": 50,
+          "arguments": [
+            {
+              "type": "short",
+              "name": "reply-code"
+            },
+            {
+              "type": "shortstr",
+              "name": "reply-text",
+              "default-value": ""
+            },
+            {
+              "type": "short",
+              "name": "class-id",
+              "doc": "When the close is provoked by a method exception, this is the class of the method."
+            },
+            {
+              "type": "short",
+              "name": "method-id",
+              "doc": "When the close is provoked by a method exception, this is the ID of the method."
+            }
+          ],
+          "name": "close",
+          "synchronous": true,
+          "doc": "This method indicates that the sender wants to close the connection. This may be due to internal conditions (e.g. a forced shut-down) or due to an error handling a specific method, i.e. an exception. When a close is due to an exception, the sender provides the class and method id of the method which caused the exception."
+        },
+        {
+          "id": 51,
+          "arguments": [],
+          "name": "close-ok",
+          "doc": "This method confirms a Connection.Close method and tells the recipient that it is safe to release resources for the connection and close the socket."
+        },
+        {
+          "id": 60,
+          "arguments": [
+            {
+              "type": "shortstr",
+              "name": "reason",
+              "default-value": ""
+            }
+          ],
+          "name": "blocked"
+        },
+        {
+          "id": 61,
+          "arguments": [],
+          "name": "unblocked"
+        },
+        {
+          "id": 70,
+          "arguments": [
+            {
+              "type": "longstr",
+              "name": "new-secret"
+            },
+            {
+              "type": "shortstr",
+              "name": "reason"
+            }
+          ],
+          "name": "update-secret",
+          "synchronous": true
+        },
+        {
+          "id": 71,
+          "arguments": [],
+          "name": "update-secret-ok"
+        }
+      ],
+      "name": "connection",
+      "properties": [],
+      "doc": "The connection class provides methods for a client to establish a network connection to a server, and for both peers to operate the connection thereafter."
+    },
+    {
+      "id": 20,
+      "methods": [
+        {
+          "id": 10,
+          "arguments": [
+            {
+              "type": "shortstr",
+              "name": "out-of-band",
+              "default-value": ""
+            }
+          ],
+          "name": "open",
+          "synchronous": true,
+          "doc": "This method opens a channel to the server."
+        },
+        {
+          "id": 11,
+          "arguments": [
+            {
+              "type": "longstr",
+              "name": "channel-id",
+              "default-value": ""
+            }
+          ],
+          "name": "open-ok",
+          "doc": "This method signals to the client that the channel is ready for use."
+        },
+        {
+          "id": 20,
+          "arguments": [
+            {
+              "type": "bit",
+              "name": "active",
+              "doc": "If 1, the peer starts sending content frames. If 0, the peer stops sending content frames."
+            }
+          ],
+          "name": "flow",
+          "synchronous": true,
+          "doc": "This method asks the peer to pause or restart the flow of content data sent by a consumer. This is a simple flow-control mechanism that a peer can use to avoid overflowing its queues or otherwise finding itself receiving more messages than it can process. Note that this method is not intended for window control. It does not affect contents returned by Basic.Get-Ok methods."
+        },
+        {
+          "id": 21,
+          "arguments": [
+            {
+              "type": "bit",
+              "name": "active",
+              "doc": "Confirms the setting of the processed flow method: 1 means the peer will start sending or continue to send content frames; 0 means it will not."
+            }
+          ],
+          "name": "flow-ok",
+          "doc": "Confirms to the peer that a flow command was received and processed."
+        },
+        {
+          "id": 40,
+          "arguments": [
+            {
+              "type": "short",
+              "name": "reply-code"
+            },
+            {
+              "type": "shortstr",
+              "name": "reply-text",
+              "default-value": ""
+            },
+            {
+              "type": "short",
+              "name": "class-id",
+              "doc": "When the close is provoked by a method exception, this is the class of the method."
+            },
+            {
+              "type": "short",
+              "name": "method-id",
+              "doc": "When the close is provoked by a method exception, this is the ID of the method."
+            }
+          ],
+          "name": "close",
+          "synchronous": true,
+          "doc": "This method indicates that the sender wants to close the channel. This may be due to internal conditions (e.g. a forced shut-down) or due to an error handling a specific method, i.e. an exception. When a close is due to an exception, the sender provides the class and method id of the method which caused the exception."
+        },
+        {
+          "id": 41,
+          "arguments": [],
+          "name": "close-ok",
+          "doc": "This method confirms a Channel.Close method and tells the recipient that it is safe to release resources for the channel."
+        }
+      ],
+      "name": "channel",
+      "doc": "The channel class provides methods for a client to establish a channel to a server and for both peers to operate the channel thereafter."
+    },
+    {
+      "id": 30,
+      "methods": [
+        {
+          "id": 10,
+          "arguments": [
+            {
+              "type": "shortstr",
+              "name": "realm",
+              "default-value": "/data"
+            },
+            {
+              "type": "bit",
+              "name": "exclusive",
+              "default-value": false
+            },
+            {
+              "type": "bit",
+              "name": "passive",
+              "default-value": true
+            },
+            {
+              "type": "bit",
+              "name": "active",
+              "default-value": true
+            },
+            {
+              "type": "bit",
+              "name": "write",
+              "default-value": true
+            },
+            {
+              "type": "bit",
+              "name": "read",
+              "default-value": true
+            }
+          ],
+          "name": "request",
+          "synchronous": true
+        },
+        {
+          "id": 11,
+          "arguments": [
+            {
+              "type": "short",
+              "name": "ticket",
+              "default-value": 1
+            }
+          ],
+          "name": "request-ok"
+        }
+      ],
+      "name": "access"
+    },
+    {
+      "id": 40,
+      "methods": [
+        {
+          "id": 10,
+          "arguments": [
+            {
+              "type": "short",
+              "name": "ticket",
+              "default-value": 0
+            },
+            {
+              "domain": "exchange-name",
+              "name": "exchange"
+            },
+            {
+              "type": "shortstr",
+              "name": "type",
+              "default-value": "direct",
+              "doc": "Each exchange belongs to one of a set of exchange types implemented by the server. The exchange types define the functionality of the exchange - i.e. how messages are routed through it. It is not valid or meaningful to attempt to change the type of an existing exchange."
+            },
+            {
+              "type": "bit",
+              "name": "passive",
+              "default-value": false,
+              "doc": "If set, the server will reply with Declare-Ok if the exchange already exists with the same name, and raise an error if not. The client can use this to check whether an exchange exists without modifying the server state. When set, all other method fields except name and no-wait are ignored. A declare with both passive and no-wait has no effect. Arguments are compared for semantic equivalence."
+            },
+            {
+              "type": "bit",
+              "name": "durable",
+              "default-value": false,
+              "doc": "If set when creating a new exchange, the exchange will be marked as durable. Durable exchanges remain active when a server restarts. Non-durable exchanges (transient exchanges) are purged if/when a server restarts."
+            },
+            {
+              "type": "bit",
+              "name": "auto-delete",
+              "default-value": false
+            },
+            {
+              "type": "bit",
+              "name": "internal",
+              "default-value": false
+            },
+            {
+              "type": "bit",
+              "name": "nowait",
+              "default-value": false
+            },
+            {
+              "type": "table",
+              "name": "arguments",
+              "default-value": {},
+              "doc": "A set of arguments for the declaration. The syntax and semantics of these arguments depends on the server implementation."
+            }
+          ],
+          "name": "declare",
+          "synchronous": true,
+          "doc": "This method creates an exchange if it does not already exist, and if the exchange exists, verifies that it is of the correct and expected class."
+        },
+        {
+          "id": 11,
+          "arguments": [],
+          "name": "declare-ok",
+          "doc": "This method confirms a Declare method and confirms the name of the exchange, essential for automatically-named exchanges."
+        },
+        {
+          "id": 20,
+          "arguments": [
+            {
+              "type": "short",
+              "name": "ticket",
+              "default-value": 0
+            },
+            {
+              "domain": "exchange-name",
+              "name": "exchange"
+            },
+            {
+              "type": "bit",
+              "name": "if-unused",
+              "default-value": false,
+              "doc": "If set, the server will only delete the exchange if it has no queue bindings. If the exchange has queue bindings the server does not delete it but raises a channel exception instead."
+            },
+            {
+              "type": "bit",
+              "name": "nowait",
+              "default-value": false
+            }
+          ],
+          "name": "delete",
+          "synchronous": true,
+          "doc": "This method deletes an exchange. When an exchange is deleted all queue bindings on the exchange are cancelled."
+        },
+        {
+          "id": 21,
+          "arguments": [],
+          "name": "delete-ok",
+          "doc": "This method confirms the deletion of an exchange."
+        },
+        {
+          "id": 30,
+          "arguments": [
+            {
+              "type": "short",
+              "name": "ticket",
+              "default-value": 0
+            },
+            {
+              "domain": "exchange-name",
+              "name": "destination"
+            },
+            {
+              "domain": "exchange-name",
+              "name": "source"
+            },
+            {
+              "type": "shortstr",
+              "name": "routing-key",
+              "default-value": ""
+            },
+            {
+              "type": "bit",
+              "name": "nowait",
+              "default-value": false
+            },
+            {
+              "type": "table",
+              "name": "arguments",
+              "default-value": {}
+            }
+          ],
+          "name": "bind",
+          "synchronous": true
+        },
+        {
+          "id": 31,
+          "arguments": [],
+          "name": "bind-ok"
+        },
+        {
+          "id": 40,
+          "arguments": [
+            {
+              "type": "short",
+              "name": "ticket",
+              "default-value": 0
+            },
+            {
+              "domain": "exchange-name",
+              "name": "destination"
+            },
+            {
+              "domain": "exchange-name",
+              "name": "source"
+            },
+            {
+              "type": "shortstr",
+              "name": "routing-key",
+              "default-value": ""
+            },
+            {
+              "type": "bit",
+              "name": "nowait",
+              "default-value": false
+            },
+            {
+              "type": "table",
+              "name": "arguments",
+              "default-value": {}
+            }
+          ],
+          "name": "unbind",
+          "synchronous": true
+        },
+        {
+          "id": 51,
+          "arguments": [],
+          "name": "unbind-ok"
+        }
+      ],
+      "name": "exchange",
+      "doc": "Exchanges match and distribute messages across queues. Exchanges can be configured in the server or declared at runtime."
+    },
+    {
+      "id": 50,
+      "methods": [
+        {
+          "id": 10,
+          "arguments": [
+            {
+              "type": "short",
+              "name": "ticket",
+              "default-value": 0
+            },
+            {
+              "domain": "queue-name",
+              "name": "queue",
+              "default-value": ""
+            },
+            {
+              "type": "bit",
+              "name": "passive",
+              "default-value": false,
+              "doc": "If set, the server will reply with Declare-Ok if the queue already exists with the same name, and raise an error if not. The client can use this to check whether a queue exists without modifying the server state. When set, all other method fields except name and no-wait are ignored. A declare with both passive and no-wait has no effect. Arguments are compared for semantic equivalence."
+            },
+            {
+              "type": "bit",
+              "name": "durable",
+              "default-value": false,
+              "doc": "If set when creating a new queue, the queue will be marked as durable. Durable queues remain active when a server restarts. Non-durable queues (transient queues) are purged if/when a server restarts. Note that durable queues do not necessarily hold persistent messages, although it does not make sense to send persistent messages to a transient queue."
+            },
+            {
+              "type": "bit",
+              "name": "exclusive",
+              "default-value": false,
+              "doc": "Exclusive queues may only be accessed by the current connection, and are deleted when that connection closes. Passive declaration of an exclusive queue by other connections are not allowed."
+            },
+            {
+              "type": "bit",
+              "name": "auto-delete",
+              "default-value": false,
+              "doc": "If set, the queue is deleted when all consumers have finished using it. The last consumer can be cancelled either explicitly or because its channel is closed. If there was no consumer ever on the queue, it won't be deleted. Applications can explicitly delete auto-delete queues using the Delete method as normal."
+            },
+            {
+              "type": "bit",
+              "name": "nowait",
+              "default-value": false
+            },
+            {
+              "type": "table",
+              "name": "arguments",
+              "default-value": {},
+              "doc": "A set of arguments for the declaration. The syntax and semantics of these arguments depends on the server implementation."
+            }
+          ],
+          "name": "declare",
+          "synchronous": true,
+          "doc": "This method creates or checks a queue. When creating a new queue the client can specify various properties that control the durability of the queue and its contents, and the level of sharing for the queue."
+        },
+        {
+          "id": 11,
+          "arguments": [
+            {
+              "domain": "queue-name",
+              "name": "queue",
+              "doc": "Reports the name of the queue. If the server generated a queue name, this field contains that name."
+            },
+            {
+              "domain": "message-count",
+              "name": "message-count"
+            },
+            {
+              "type": "long",
+              "name": "consumer-count",
+              "doc": "Reports the number of active consumers for the queue. Note that consumers can suspend activity (Channel.Flow) in which case they do not appear in this count."
+            }
+          ],
+          "name": "declare-ok",
+          "doc": "This method confirms a Declare method and confirms the name of the queue, essential for automatically-named queues."
+        },
+        {
+          "id": 20,
+          "arguments": [
+            {
+              "type": "short",
+              "name": "ticket",
+              "default-value": 0
+            },
+            {
+              "domain": "queue-name",
+              "name": "queue",
+              "default-value": "",
+              "doc": "Specifies the name of the queue to bind."
+            },
+            {
+              "domain": "exchange-name",
+              "name": "exchange"
+            },
+            {
+              "type": "shortstr",
+              "name": "routing-key",
+              "default-value": "",
+              "doc": "Specifies the routing key for the binding. The routing key is used for routing messages depending on the exchange configuration. Not all exchanges use a routing key - refer to the specific exchange documentation. If the queue name is empty, the server uses the last queue declared on the channel. If the routing key is also empty, the server uses this queue name for the routing key as well. If the queue name is provided but the routing key is empty, the server does the binding with that empty routing key. The meaning of empty routing keys depends on the exchange implementation."
+            },
+            {
+              "type": "bit",
+              "name": "nowait",
+              "default-value": false
+            },
+            {
+              "type": "table",
+              "name": "arguments",
+              "default-value": {},
+              "doc": "A set of arguments for the binding. The syntax and semantics of these arguments depends on the exchange class."
+            }
+          ],
+          "name": "bind",
+          "synchronous": true,
+          "doc": "This method binds a queue to an exchange. Until a queue is bound it will not receive any messages. In a classic messaging model, store-and-forward queues are bound to a direct exchange and subscription queues are bound to a topic exchange."
+        },
+        {
+          "id": 21,
+          "arguments": [],
+          "name": "bind-ok",
+          "doc": "This method confirms that the bind was successful."
+        },
+        {
+          "id": 30,
+          "arguments": [
+            {
+              "type": "short",
+              "name": "ticket",
+              "default-value": 0
+            },
+            {
+              "domain": "queue-name",
+              "name": "queue",
+              "default-value": "",
+              "doc": "Specifies the name of the queue to purge."
+            },
+            {
+              "type": "bit",
+              "name": "nowait",
+              "default-value": false
+            }
+          ],
+          "name": "purge",
+          "synchronous": true,
+          "doc": "This method removes all messages from a queue which are not awaiting acknowledgment."
+        },
+        {
+          "id": 31,
+          "arguments": [
+            {
+              "domain": "message-count",
+              "name": "message-count",
+              "doc": "Reports the number of messages purged."
+            }
+          ],
+          "name": "purge-ok",
+          "doc": "This method confirms the purge of a queue."
+        },
+        {
+          "id": 40,
+          "arguments": [
+            {
+              "type": "short",
+              "name": "ticket",
+              "default-value": 0
+            },
+            {
+              "domain": "queue-name",
+              "name": "queue",
+              "default-value": "",
+              "doc": "Specifies the name of the queue to delete."
+            },
+            {
+              "type": "bit",
+              "name": "if-unused",
+              "default-value": false,
+              "doc": "If set, the server will only delete the queue if it has no consumers. If the queue has consumers the server does does not delete it but raises a channel exception instead."
+            },
+            {
+              "type": "bit",
+              "name": "if-empty",
+              "default-value": false,
+              "doc": "If set, the server will only delete the queue if it has no messages."
+            },
+            {
+              "type": "bit",
+              "name": "nowait",
+              "default-value": false
+            }
+          ],
+          "name": "delete",
+          "synchronous": true,
+          "doc": "This method deletes a queue. When a queue is deleted any pending messages are sent to a dead-letter queue if this is defined in the server configuration, and all consumers on the queue are cancelled."
+        },
+        {
+          "id": 41,
+          "arguments": [
+            {
+              "domain": "message-count",
+              "name": "message-count",
+              "doc": "Reports the number of messages deleted."
+            }
+          ],
+          "name": "delete-ok",
+          "doc": "This method confirms the deletion of a queue."
+        },
+        {
+          "id": 50,
+          "arguments": [
+            {
+              "type": "short",
+              "name": "ticket",
+              "default-value": 0
+            },
+            {
+              "domain": "queue-name",
+              "name": "queue",
+              "default-value": "",
+              "doc": "Specifies the name of the queue to unbind."
+            },
+            {
+              "domain": "exchange-name",
+              "name": "exchange",
+              "doc": "The name of the exchange to unbind from."
+            },
+            {
+              "type": "shortstr",
+              "name": "routing-key",
+              "default-value": "",
+              "doc": "Specifies the routing key of the binding to unbind."
+            },
+            {
+              "type": "table",
+              "name": "arguments",
+              "default-value": {},
+              "doc": "Specifies the arguments of the binding to unbind."
+            }
+          ],
+          "name": "unbind",
+          "synchronous": true,
+          "doc": "This method unbinds a queue from an exchange."
+        },
+        {
+          "id": 51,
+          "arguments": [],
+          "name": "unbind-ok",
+          "doc": "This method confirms that the unbind was successful."
+        }
+      ],
+      "name": "queue",
+      "doc": "Queues store and forward messages. Queues can be configured in the server or created at runtime. Queues must be attached to at least one exchange in order to receive messages from publishers."
     },
     {
       "id": 90,
@@ -1440,37 +1592,44 @@
           "id": 10,
           "arguments": [],
           "name": "select",
-          "synchronous": true
+          "synchronous": true,
+          "doc": "This method sets the channel to use standard transactions. The client must use this method at least once on a channel before using the Commit or Rollback methods."
         },
         {
           "id": 11,
           "arguments": [],
-          "name": "select-ok"
+          "name": "select-ok",
+          "doc": "This method confirms to the client that the channel was successfully set to use standard transactions."
         },
         {
           "id": 20,
           "arguments": [],
           "name": "commit",
-          "synchronous": true
+          "synchronous": true,
+          "doc": "This method commits all message publications and acknowledgments performed in the current transaction. A new transaction starts immediately after a commit."
         },
         {
           "id": 21,
           "arguments": [],
-          "name": "commit-ok"
+          "name": "commit-ok",
+          "doc": "This method confirms to the client that the commit succeeded. Note that if a commit fails, the server raises a channel exception."
         },
         {
           "id": 30,
           "arguments": [],
           "name": "rollback",
-          "synchronous": true
+          "synchronous": true,
+          "doc": "This method abandons all message publications and acknowledgments performed in the current transaction. A new transaction starts immediately after a rollback. Note that unacked messages will not be automatically redelivered by rollback; if that is required an explicit recover call should be issued."
         },
         {
           "id": 31,
           "arguments": [],
-          "name": "rollback-ok"
+          "name": "rollback-ok",
+          "doc": "This method confirms to the client that the rollback succeeded. Note that if an rollback fails, the server raises a channel exception."
         }
       ],
-      "name": "tx"
+      "name": "tx",
+      "doc": "The Tx class allows publish and ack operations to be batched into atomic units of work. The intention is that all publish and ack requests issued within a transaction will complete successfully or none of them will. Servers SHOULD implement atomic transactions at least where all publish or ack requests affect a single queue. Transactions that cover multiple queues may be non-atomic, given that queues can be created and destroyed asynchronously, and such events do not form part of any transaction. Further, the behaviour of transactions with respect to the immediate and mandatory flags on Basic.Publish methods is not defined."
     },
     {
       "id": 85,

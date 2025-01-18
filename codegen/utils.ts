@@ -83,12 +83,19 @@ export function constantName(...names: string[]) {
 }
 
 export function printClassPropertyInterface(clazz: ClassDefinition) {
+  const comment = [
+    ...clazz.doc ? [`/** ${clazz.doc} */`] : [],
+    ...!clazz.properties?.length ? ["/** @ignore */"] : [],
+  ].join("\n");
   return `
-  ${!clazz.properties?.length ? "/** @ignore */" : ""}
+  ${comment}
   export interface ${pascalCase(clazz.name)}Properties {
     ${
     (clazz.properties || []).map((prop) => {
-      return `${camelCase(prop.name)}?: ${resolveTypescriptType(prop.type)}`;
+      return [
+        ...prop.doc ? [`/** ${prop.doc} */`] : [],
+        `${camelCase(prop.name)}?: ${resolveTypescriptType(prop.type)}`,
+      ].join("\n");
     }).join("\n")
   }
   }
@@ -106,8 +113,12 @@ export function printMethodArgsInterface(
     )
   }Args`;
   const args = method.arguments.filter((arg) => arg.name !== "nowait");
+  const comment = [
+    ...method.doc ? [`/** ${method.doc} */`] : [],
+    ...!args.length ? ["/** @ignore */"] : [],
+  ].join("\n");
   return `
-${!args.length ? "/** @ignore */" : ""}
+${comment}
 export interface ${name} {
     ${
     args.map((arg) => {
@@ -116,9 +127,14 @@ export interface ${name} {
         ? `/** Default ${JSON.stringify(arg["default-value"])} */`
         : "";
       const type = resolveTypescriptType(resolveType(spec, arg));
-      return `${comment}${camelCase(arg.name)}${
-        isOptional ? "?" : ""
-      }: ${type};`;
+      return [
+        ...arg.doc ? [`/** ${arg.doc} */`] : [],
+        [
+          `${camelCase(arg.name)}${isOptional ? "?" : ""}:`,
+          `${type};`,
+          comment,
+        ].join(" "),
+      ].join("\n");
     }).join("\n")
   }
 }
@@ -130,9 +146,13 @@ export function printMethodValueInterface(
   clazz: ClassDefinition,
   method: MethodDefinition,
 ) {
+  const comment = [
+    ...method.doc ? [`/** ${method.doc} */`] : [],
+    ...!method.arguments.length ? ["/** @ignore */"] : [],
+  ].join("\n");
   const name = `${pascalCase(clazz.name)}${pascalCase(method.name)}`;
   return `
-${!method.arguments.length ? "/** @ignore */" : ""}
+${comment}
 export interface ${name} extends ${name}Args {
     ${
     method.arguments.map((arg) => {
@@ -149,6 +169,7 @@ export function printReceiveMethodDefinition(
   method: MethodDefinition,
 ) {
   return `
+  ${method.doc ? `/** ${method.doc} */` : ""}
   export interface Receive${pascalCase(clazz.name)}${
     pascalCase(
       method.name,
@@ -169,6 +190,7 @@ export function printSendMethodDefinition(
   const argsName = `t.${pascalCase(clazz.name)}${pascalCase(method.name)}Args`;
   const argsType = hasNowait ? `WithNowait<${argsName}>` : argsName;
   return `
+  ${method.doc ? `/** ${method.doc} */` : ""}
   export interface Send${pascalCase(clazz.name)}${
     pascalCase(
       method.name,
@@ -318,9 +340,7 @@ function decodeMethod(data: Uint8Array): ReceiveMethod {
   `;
 }
 
-export function printEncodeHeader(
-  clazz: ClassDefinition,
-) {
+export function printEncodeHeader(clazz: ClassDefinition) {
   return `
   encoder.write("flags", [
     ${
