@@ -3,7 +3,7 @@
   "version": "1.0.1",
   "exports": "./mod.ts",
   "tasks": {
-    "cache": "deno install --lock deno.lock && deno install --entrypoint deps_dev.ts",
+    "cache": "deno install --lock deno.lock",
     "test": "deno test src",
     "test:mod": "deno test -A --unsafely-ignore-certificate-errors=127.0.0.1 test/",
     "codegen": "deno task codegen:codec && deno task codegen:types && deno task codegen:constants",
@@ -17,5 +17,5 @@
     "@std/io/types": "jsr:@std/io@0.225.0/types",
     "@std/streams": "jsr:@std/streams@1.0.8"
   },
-  "lock": true
+  "lock": false
 }
