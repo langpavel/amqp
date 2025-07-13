@@ -1,17 +1,20 @@
-# amqp
+# @langpavel/amqp
 
-This is a fork of the fantastic
-[`deno-amqp`](https://github.com/lenkan/deno-amqp) AMQP 0.9.1 implementation.
+This is a fork of the [`nashaddams/amqp`](https://github.com/nashaddams/amqp) at
+[this commit](https://github.com/nashaddams/amqp/commit/b71a69e0fbf7def434f7bc914b4ed6b0b3bef813)
+AMQP 0.9.1 implementation, which is fork of
+[`lenkan/deno-amqp`](https://github.com/lenkan/deno-amqp) AMQP 0.9.1
+implementation.
 
-[![JSR](https://jsr.io/badges/@nashaddams/amqp)](https://jsr.io/@nashaddams/amqp)
-[![main](https://github.com/nashaddams/amqp/actions/workflows/tests.yml/badge.svg)](https://github.com/nashaddams/amqp/actions)
+[![JSR](https://jsr.io/badges/@langpavel/amqp)](https://jsr.io/@langpavel/amqp)
+[![main](https://github.com/langpavel/amqp/actions/workflows/tests.yml/badge.svg)](https://github.com/langpavel/amqp/actions)
 
 ## Usage
 
 ### Consuming messages
 
 ```ts
-import { connect } from "jsr:@nashaddams/amqp";
+import { connect } from "jsr:@langpavel/amqp";
 
 const connection = await connect({
   hostname: "127.0.0.1",
@@ -35,7 +38,7 @@ await channel.consume(
 ### Publishing messages
 
 ```ts
-import { connect } from "jsr:@nashaddams/amqp";
+import { connect } from "jsr:@langpavel/amqp";
 
 const connection = await connect({
   hostname: "127.0.0.1",
@@ -57,7 +60,7 @@ await connection.close();
 ### TLS
 
 ```ts
-import { connect } from "jsr:@nashaddams/amqp";
+import { connect } from "jsr:@langpavel/amqp";
 
 const connection = await connect({
   hostname: "127.0.0.1",
@@ -106,6 +109,9 @@ result/server_guest_key.pem
 ```
 
 ## Acknowledgments
+
+Thanks to [@nashaddams](https://github.com/nashaddams) for maintaining
+[`amqp`](https://github.com/nashaddams/amqp).
 
 Thanks to [@lenkan](https://github.com/lenkan) for creating
 [`deno-amqp`](https://github.com/lenkan/deno-amqp).

@@ -46,7 +46,7 @@ const clientProperties = Object.freeze({
   product: "amqp",
   platform: `Deno ${Deno.version.deno} https://deno.land`,
   version: "0",
-  information: "https://jsr.io/@nashaddams/amqp",
+  information: "https://jsr.io/@langpavel/amqp",
 });
 
 function tune(ours: number | undefined, theirs: number) {
