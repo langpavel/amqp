@@ -13,10 +13,10 @@
     "download:spec": "deno run -W=codegen -N=raw.githubusercontent.com,www.rabbitmq.com codegen/download_spec.ts | deno fmt - > codegen/amqp-rabbitmq-0.9.1.json"
   },
   "imports": {
-    "@std/io/buffer": "jsr:@std/io@0.225.0/buffer",
-    "@std/io/write-all": "jsr:@std/io@0.225.0/write-all",
-    "@std/io/types": "jsr:@std/io@0.225.0/types",
-    "@std/streams": "jsr:@std/streams@1.0.8"
+    "@std/io/buffer": "jsr:@std/io@0.225.2/buffer",
+    "@std/io/write-all": "jsr:@std/io@0.225.2/write-all",
+    "@std/io/types": "jsr:@std/io@0.225.2/types",
+    "@std/streams": "jsr:@std/streams@1.0.10"
   },
   "publish": {
     "include": [
